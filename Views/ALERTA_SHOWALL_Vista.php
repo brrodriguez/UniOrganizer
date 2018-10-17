@@ -4,14 +4,9 @@ class ALERTA_Listar {
 
     private $datos;
     private $volver;
-    private $tipoUsuario;
-    private $cont;
-    private $vuelta;
-    private $enviados;
 
-    function __construct($datos, $tipoUsuario, $volver) {
+    function __construct($datos, $volver) {
         $this->datos = $datos;
-        $this->tipoUsuario = $tipoUsuario;
         $this->volver = $volver;
         $this->render();
     }
@@ -21,12 +16,12 @@ class ALERTA_Listar {
         ?> 
         <div class="container">
             <?php
-            $lista = array('idAlerta', 'fechaHora', 'asuntoAlerta', 'descripcionAlerta', 'idCalendario');
+            $lista = array( 'asuntoAlerta', 'descripcionAlerta');
             ?>
             <div class="container">
+				<br>
                 <div align='left'>
-					<button type="button" class="btn btn-success btn-lg"><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $strings['Crear'] ?></a></button>
-					<button type="button" class="btn btn-primary btn-lg"><a href='ALERTA_Controller.php?accion=<?php echo $strings['Consultar']; ?>'><?php echo $strings['Consultar'] ?></a></button>  
+					<a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><button type="button" class="btn btn-primary btn-lg btn-block"><?php echo $strings['Crear'] ?></button></a>				
          
                     <table class="table">
                         <thead class="thead-dark">
@@ -40,26 +35,29 @@ class ALERTA_Listar {
                                 echo "</tr>";
                                 echo "</thead>";
                                 echo "<tbody>";
-                                for ($j = 0; $j < count($this->datos); $j++) {
-                                    echo "<tr>";
-                                    foreach ($this->datos [$j] as $clave => $valor) {
-                                        for ($i = 0; $i < count($lista); $i++) {
-                                            if ($clave === $lista[$i]) {
-                                                echo "<td>";
-                                                                                     
-												echo $valor;
+									for ($j = 0; $j < count($this->datos); $j++) {
+										echo "<tr>";
+									
+										foreach ($this->datos[$j] as $clave => $valor ){
+											for ($i = 0; $i < count($lista); $i++) {
+												if ($clave === $lista[$i]) {
+													echo "<td>"; 
+													
+													if ($clave === 'asuntoAlerta') {
+														?>
+														<a href='ALERTA_Controller.php?idAlerta=<?php echo $this->datos[$j]['idAlerta'] . '&accion=' . $strings['Ver']; ?>'><?php echo $this->datos[$j]['asuntoAlerta'];?></a> <?php
+													} else {
+														echo $valor;
+													}
+																							
+													echo "</td>";
+												}										
 											}
-                                        echo "</td>";
 										}
-									}
-								
-                            ?>
-
- 
-                            <td><button type="button" class="btn btn-info"><a href='ALERTA_Controller.php?username=<?php echo $this->datos[$j]['idAlerta'] . '&accion=' . $strings['Modificar']; ?>'><?php echo $strings['Modificar']; ?></a></button></td>
-                            <td><button type="button" class="btn btn-danger"><a href='ALERTA_Controller.php?username=<?php echo $this->datos[$j]['idAlerta'] . '&accion=' . $strings['Borrar']; ?>'><?php echo $strings['Borrar']; ?></a></button></td>
-                                    <?php
-                                }
+										?>
+										<td><button type="button" class="btn btn-danger"><a href='ALERTA_Controller.php?idAlerta=<?php echo $this->datos[$j]['idAlerta'] . '&accion=' . $strings['Borrar']; ?>'><?php echo $strings['Borrar']; ?></a></button></td>
+										<?php
+									}							                           
                                 ?>
                         </tbody>
                     </table>

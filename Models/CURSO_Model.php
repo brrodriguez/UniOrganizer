@@ -100,14 +100,30 @@ class CURSO_Model {
     function asignarAsignaturas($idCurso, $listaAsignaturas) {
         $this->ConectarBD();
 
-        $sql = "INSERT INTO asignatura_curso VALUES ('" . $idCurso . "',( SELECT idAsignatura FROM asignatura WHERE idAsignatura='" . $listaAsignaturas[0] . "'))";
+        $sql = "INSERT INTO asignatura_curso VALUES ('" . $idCurso . "',( SELECT idAsignatura FROM asignatura WHERE nombreAsignatura='" . $listaAsignaturas[0] . "'))";
+        if (!($resultado = $this->mysqli->query($sql))) {
+            return 'Error en la consulta sobre la base de datos.';
+        }
+    }
+	
+	function asignarAsignatura($idCurso, $idAsignatura) {
+        $this->ConectarBD();
+
+        $sql = "INSERT INTO asignatura_curso VALUES ('" . $idCurso . "','" . $idAsignatura . "')";
         if (!($resultado = $this->mysqli->query($sql))) {
             return 'Error en la consulta sobre la base de datos.';
         }
     }
 
-    function desasignarAsignatura($idCurso, $idAsignatura) {
+    function desasignarAsignatura($idCurso, $nombreAsignatura) {
         $this->ConectarBD();
+		$sql = "SELECT idAsignatura AS id FROM asignatura WHERE nombreAsignatura='" . $nombreAsignatura . "'";
+		if (!($resultado = $this->mysqli->query($sql))) {
+            return 'Error en la consulta sobre la base de datos.';
+        } else {
+            $toret = $resultado->fetch_array();
+            $idAsignatura = $toret['id'];
+        }
         $sql = "DELETE FROM asignatura_curso WHERE idCurso='" . $idCurso . "' AND idAsignatura=" . $idAsignatura . "";
         if (!($resultado = $this->mysqli->query($sql))) {
             return 'Error en la consulta sobre la base de datos.';
@@ -117,9 +133,9 @@ class CURSO_Model {
     function obtenerRelacion_CursoAsignaturas($idCurso) {
         $this->ConectarBD();
         $sql = "SELECT *
-				FROM asignatura_curso as t1, asignatura as t2
-				WHERE (t1.idAsignatura=t2.idAsignatura) AND (t1.idCurso='" . $idCurso . "')
-				GROUP BY t1.idAsignatura;";
+				FROM asignatura_curso AC, asignatura A
+				WHERE AC.idAsignatura=A.idAsignatura AND AC.idCurso='" . $idCurso . "'
+				GROUP BY AC.idAsignatura;";
         if (!($resultado = $this->mysqli->query($sql))) {
             return 'Error en la consulta sobre la base de datos.';
         } else {

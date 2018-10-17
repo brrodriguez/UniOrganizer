@@ -1,6 +1,6 @@
 <?php
 
-class CURSO_Edit {
+class CURSO_EDIT {
 
     private $datos;
     private $volver;
@@ -18,7 +18,7 @@ class CURSO_Edit {
 
 
         echo '<div class="container">
-				<form method="POST" action="../Controllers/CURSO_Controller.php?accion=guardarmod&id=' . $this->datos['idCurso'] . '">
+				<form method="POST" action="../Controllers/CURSO_Controller.php?accion=modificar&id=' . $this->datos['idCurso'] . '">
 				<div class="form-group row">
 					<label for="example-text-input" class="col-2 col-form-label">' . $strings['nombreCurso'] . '</label>
 					<div class="col-10">

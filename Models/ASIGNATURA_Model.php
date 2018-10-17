@@ -58,7 +58,7 @@ class ASIGNATURA_Model {
         }
     }
 
-    function VerDetalle($id) {
+    function Ver($id) {
         $this->ConectarBD();
         $sql = "SELECT * FROM asignatura WHERE idAsignatura='" . $id . "'";
         if (!($resultado = $this->mysqli->query($sql))) {

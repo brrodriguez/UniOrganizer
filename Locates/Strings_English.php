@@ -49,6 +49,7 @@ $strings = array(
  'ActividadMas' => 'Activity/ies with more enrolled',
  'ActividadMenos' => 'Activity/ies with less enrolled',
  'PlazasOcupadas' => 'Inscribed',
+ 'nombreAsignatura' => 'Nombre Asignatura',
  'Ocupacion' => 'Occupation',
  'EntrenadorMas' => 'Coach/s who teaches more classes',
  'EntrenadorMenos' => 'Coach/s who teaches less classes',

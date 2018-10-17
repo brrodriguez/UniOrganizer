@@ -7,6 +7,7 @@ include '../Views/MENSAJE_Vista.php';
 if (!IsAuthenticated()) {
     header('Location:../index.php');
 }
+include_once '../Functions/LibraryFunctions.php';
 include '../Views/header.php';
 include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php';
 
@@ -22,13 +23,11 @@ if (!isset($_REQUEST['accion'])) {
 //En el caso de la inserción el username y usuario van a ser el mismo.
 function get_data_form() {
     $idAlerta = $_REQUEST['idAlerta'];
-    $fechaHora = $_REQUEST['fechaHora'];
     $asuntoAlerta = $_REQUEST['asuntoAlerta'];
     $descripcionAlerta = $_REQUEST['descripcionAlerta'];
-    $idCalendario = $_REQUEST['idCalendario'];
 
 
-    $alerta = new ALERTA_Model($idAlerta, $fechaHora, $asuntoAlerta, $descripcionAlerta, $idCalendario);
+    $alerta = new ALERTA_Model($idAlerta, $asuntoAlerta, $descripcionAlerta);
     return $alerta;
 }
 
@@ -40,25 +39,26 @@ switch ($_REQUEST['accion']) {
             new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
         } else {
             if (!isset($_REQUEST['username'])) {
-                //Si es administrador le pasa todos los usuarios a la vista
-                if (ConsultarTipoUsuario($_SESSION['login']) == 1) {
-                    $alerta = new ALERTA_Model('', '', '', '', '');
+				
+                $alerta = new ALERTA_Model('', '', '');                 
+                new ALERTA_Insertar( '../Controllers/ALERTA_Controller.php');
+                
 
-                   
-                    new ALERTA_Insertar( '../Controllers/ALERTA_Controller.php');
-                }
-
-
-                //Si es entrenador le pasa solo los deportistas a la vista
-                else
-                if (ConsultarTipoUsuario($_SESSION['login']) == 2) {
-                    $alerta = new ALERTA_Model('', '', '', '', '');
-
-                    new ALERTA_Insertar( '../Controllers/ALERTA_Controller.php');
-                }
             } else {
-                $alerta = new ALERTA_Model( '', '', $_REQUEST['asuntoAlerta'], $_REQUEST['descripcionAlerta'], $_REQUEST['idCalendario']);
-                $respuesta = $alerta->Insertar();
+				$fecha = $_REQUEST['fecha'];
+				$menos = '-';
+				$dias = $_REQUEST['dias'];
+				$day = ' day';
+				$dia = $menos . $dias . $day;
+				$nuevafecha = strtotime ( $dia , strtotime ( $fecha ) ) ;
+				$nuevafecha = date ( 'Y-m-j' , $nuevafecha );
+				$alerta = new ALERTA_Model( '', $_REQUEST['asuntoAlerta'], $_REQUEST['descripcionAlerta']);
+                $respuesta = $alerta->Insertar($_REQUEST['fecha'], $_REQUEST['hora']);
+				$aviso1 = "AVISO: ";
+				$aviso2 = " dias para ";
+				$asunto = $aviso1 . $dias . $aviso2;
+                $alerta2 = new ALERTA_Model( '', $asunto, $_REQUEST['descripcionAlerta']);
+				$alerta2->Insertar($nuevafecha, $_REQUEST['hora']);
                 new Mensaje($respuesta, '../Controllers/ALERTA_Controller.php');
             }
         }
@@ -68,31 +68,45 @@ switch ($_REQUEST['accion']) {
         if (!tienePermisos('ALERTA_Borrar')) {
             new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
         } else {
-            $alerta = new ALERTA_Model($_REQUEST['idAlerta'], '', '', '', '');
-            $respuesta = $alerta->Borrar();
-            new Mensaje($respuesta, '../Controllers/ALERTA_Controller.php');
+			if (!isset($_REQUEST['username'])) {
+				
+                $idAlerta = $_REQUEST['idAlerta'];
+                $alerta = new ALERTA_Model($idAlerta, '', '');
+                $datos = $alerta->Ver();               
+                new ALERTA_Borrar($datos, '../Controllers/ALERTA_Controller.php');
+                
+
+            } else {
+                $alerta = new ALERTA_Model($_REQUEST['idAlerta'], '', '');
+				$respuesta = $alerta->Borrar();
+				new Mensaje($respuesta, '../Controllers/ALERTA_Controller.php');
+            }
+            
         }
         break;
-
-    case $strings['Consultar']:
-        if (!isset($_REQUEST['consulta'])) {
-            if (!tienePermisos('ALERTA_Consultar')) {
-                new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
-            } else {
-                new ALERTA_Consultar('../Controllers/ALERTA_Controller.php');
-            }
-        } else {
-            $alerta = new ALERTA_Model('', '', $_REQUEST['Asunto'], $_REQUEST['Mensaje'], $_SESSION['login']);
-            $datos = $alerta->Consultar();
-            $tipoUsuario = ConsultarTipoUsuario($_SESSION['login']);
-            new ALERTA_Listar($datos, $tipoUsuario, '../Controllers/ALERTA_Controller.php');
-        }
-		break;
 
     //En el caso de que quiera consultar una alerta en concreto creo la alerta solo con el id que va a venir de la vista,
     //llamo a la funcion que obtiene los datos sobre esa alerta y creo una vista showcurrent mostrando los datos y con el controlador de las alertas.
     case $strings['Ver']:
+		
+		if (!tienePermisos('ALERTA_Ver')) {
+            new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
+        } else {
+			if (!isset($_REQUEST['username'])) {
+				
+                $idAlerta = $_REQUEST['idAlerta'];
+                $alerta = new ALERTA_Model($idAlerta, '', '');
+                $datos = $alerta->Ver();               
+                new ALERTA_Ver($datos, '../Controllers/ALERTA_Controller.php');
+                
 
+            } else {
+                $alerta = new ALERTA_Model($_REQUEST['idAlerta'], '', '');
+				$respuesta = $alerta->Borrar();
+				new Mensaje($respuesta, '../Controllers/ALERTA_Controller.php');
+            }
+            
+        }
         if (!tienePermisos('ALERTA_Seleccionar')) {
             new Mensaje('No tienes los permisos necesarios', '../Controllers/ALERTA_Controller.php');
         } else {
@@ -106,14 +120,14 @@ switch ($_REQUEST['accion']) {
                 if($_REQUEST['usuario']=="envio")
                 {
                 $idAlerta = $_REQUEST['idAlerta'];
-                $alerta = new ALERTA_Model($idAlerta, '', '', '', '');
-                $resultado = $alerta->VerSinEstado();
+                $alerta = new ALERTA_Model($idAlerta, '', '');
+                $resultado = $alerta->Ver();
                 new ALERTA_Seleccionar($resultado, '../Controllers/ALERTA_Controller.php');
                 }
                 else
                 {
                 $idAlerta = $_REQUEST['idAlerta'];
-                $alerta = new ALERTA_Model($idAlerta, '', '', '', '');
+                $alerta = new ALERTA_Model($idAlerta, '', '');
                 $resultado = $alerta->Ver();
                 new ALERTA_Seleccionar($resultado, '../Controllers/ALERTA_Controller.php');
                 }
@@ -130,17 +144,16 @@ switch ($_REQUEST['accion']) {
 			$tipoUsuario = ConsultarTipoUsuario($_SESSION['login']);
 			if($tipoUsuario == 1){
 				
-				$idCalendario = ObtenerCalendario($_SESSION['login']);
-				$alerta = new ALERTA_Model('', '', '', '', '');
+				$alerta = new ALERTA_Model('', '', '');
 				$datos = $alerta->ListarTodo();				
-				new ALERTA_Listar($datos, $tipoUsuario, '../Controllers/ALERTA_Controller.php');
+				new ALERTA_Listar($datos, '../Controllers/ALERTA_Controller.php');
 				
 			}else{ 
 			
 				$idCalendario = ObtenerCalendario($_SESSION['login']);
-				$alerta = new ALERTA_Model('', '', '', '', $idCalendario);
+				$alerta = new ALERTA_Model('', '', '');
 				$datos = $alerta->Listar($idCalendario);				
-				new ALERTA_Listar($datos, $tipoUsuario, '../Controllers/ALERTA_Controller.php');
+				new ALERTA_Listar($datos, '../Controllers/ALERTA_Controller.php');
 			}
 			
         }

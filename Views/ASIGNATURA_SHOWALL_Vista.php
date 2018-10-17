@@ -1,12 +1,14 @@
 <?php
 
-class ASIGNATURA_SHOW{
+class ASIGNATURA_SHOWALL{
 
     private $datos;
     private $volver;
+	private $tipoUsuario;
 
-    function __construct($array, $volver) {
+    function __construct($array, $tipoUsuario, $volver) {
         $this->datos = $array;
+		$this->tipoUsuario = $tipoUsuario;
         $this->volver = $volver;
         $this->render();
     }
@@ -18,9 +20,6 @@ class ASIGNATURA_SHOW{
                
 		echo '<div class="container">';
                 echo '<br>';
-                echo '<br>';
-                
-		echo '<a href="?accion=vistainsertar"><button type="button" class="btn btn-primary btn-lg">'.$strings['newAsignatura'].'</button></a>';
                 
 		echo'<table class="table">
 			  <thead class="thead-dark">
@@ -37,12 +36,13 @@ class ASIGNATURA_SHOW{
 			echo '<tr>';
 			echo '<th><br>'.$valor['1'].'</th>';
 			echo '<td><br>'. saltoLinea($valor['2']).'</td>';
-			echo '<td><a href="?accion=modificar&id='.$valor['0'].'"><button type="button" class="btn btn-primary">'.$strings['asignaturamodificar'].'</button></a></td>';
-			echo '<td><a href="?accion=eliminar&id='.$valor['0'].'"><button type="button" class="btn btn-danger">'.$strings['asignaturaeliminar'].'</button></a></td>';
+			if($this->tipoUsuario==1){
+				echo '<td><a href="?accion=vistaeliminar&id='.$valor['0'].'"><button type="button" class="btn btn-danger">'.$strings['asignaturaeliminar'].'</button></a></td>';
+			}
 			echo '</tr>';
 		}			
 				
-	
+		
 		echo '</tbody>
 			</table>';
 		echo '</div>';
