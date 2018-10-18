@@ -20,7 +20,7 @@ class USUARIO_Show {
             $lista = array('username', 'tipoUsuario', 'nombre', 'apellidos', 'dni', 'fechaNac', 'niu', 'email');
             ?>
             <div class="container">
-                <div align='left'>
+                <div align='center'>
 					<a href='USUARIO_Controller.php?accion=<?php echo $strings['Insertar']; ?>&user=admin'><img src="../img/admin.jpg" width="54px" height="54px"><?php echo $strings['addAdministrador']; ?></a>
 					
          

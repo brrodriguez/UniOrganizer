@@ -1,44 +1,53 @@
 <?php
 
-class ALERTA_Consultar
-{
-	private $volver;
-	function __construct($volver)
-	{
-		$this->volver = $volver;
-		$this->render();
-	}
-    function render()
-    {?>
+class ALERTA_Ver {
+    private $valores;
+    private $volver;
 
-    	<script type="text/javascript" src="../js/validate.js"></script>
-
-        <?php
-        include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php'; ?>
-    <div class="container" >
-            <form  id="form" name="form" action='ALERTA_Controller.php'  method='post'   enctype="multipart/form-data">
-	
-		<div class="form-group">
-			<label class="control-label" ><?php echo $strings['Asunto']; ?></label><br>
-			<input class="form" id="Asunto" name="Asunto" size="25" type="text"/>
-		</div>
-		<div class="form-group">
-                    <label class="control-label" ><?php echo $strings['Descripción']; ?></label><br>
-                    <textarea rows="25" cols="70" name="Mensaje"></textarea>
-                    
-                </div>
-		<div class="form-group">
-		<div class="form-group">
-                    <input type="hidden" id="consulta" name="consulta" size="25" type="text" required="true" value='consulta'/>
-                </div>
-      <br>
-
-                    <input type='submit' onclick="return valida_envia_USUARIO()" name='accion'  value="<?php echo $strings['Consultar']; ?>">
-                <a class="form-link" href="ALERTA_Controller.php"><?php echo $strings['Volver']; ?>
-            </form>
-        </div>
-      <?php
+    function __construct($valores, $volver) {
+        $this->valores = $valores;
+        $this->volver = $volver;
+        $this->render();
     }
 
+    function render() {
+
+        include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php';
+        ?>
+
+        <div class="container" >
+            <form  id="form" name="form" action='ALERTA_Controller.php'  method='post'   enctype="multipart/form-data">
+                <div class="form-group" >
+                    <label class="control-label" ><?php echo $strings['Ver Alerta']; ?></label><br>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" ><?php echo $strings['asuntoAlerta']; ?></label><br>
+                     <input class="form" id="asuntoAlerta" name="asuntoAlerta"  size="50" readonly="true" value="<?php echo $this->valores['asuntoAlerta']; ?>">
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" ><?php echo $strings['descripcionAlerta']; ?></label><br>
+                    <textarea rows="20" cols="70" name="descripcionAlerta" readonly="true"><?php echo $this->valores['descripcionAlerta'];?></textarea>             
+                </div>
+
+
+                <div class="form-group">
+                    <input type="hidden" class="form" id="username" name="username" size="25" type="text" readonly="true" value="<?php echo $this->valores['username']; ?>">
+                </div>
+				<div class="form-group">
+                    <input type="hidden" class="form" id="idAlerta" name="idAlerta" size="25" type="text" readonly="true" value="<?php echo $this->valores['idAlerta']; ?>">
+                </div>
+        <br>
+
+        <a class="form-link" href='<?php echo $this->volver ?> '><?php echo $strings['Volver']; ?> </a>
+        </form>
+
+        </div>
+        <?php
+        include '../Views/footer.php';
+    }
+
+// fin del metodo render
 }
 ?>

@@ -1,18 +1,18 @@
 <?php
 
 //Controlador para la gestión de usuarios
-include '../Models/USUARIO_Model.php';
-include '../Views/MENSAJE_Vista.php';
+include_once '../Models/USUARIO_Model.php';
+include_once '../Views/MENSAJE_Vista.php';
 
 if (!IsAuthenticated()) {
     header('Location:../index.php');
 }
-include '../Views/header.php';
+include_once '../Views/header.php';
 include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php';
 
 $pags = generarIncludes(); //Realizamos los includes de las páginas a las que tiene acceso
 for ($z = 0; $z < count($pags); $z++) {
-    include $pags[$z];
+    include_once $pags[$z];
 }
 
 //Método que recoge la información del formulario para usuarios

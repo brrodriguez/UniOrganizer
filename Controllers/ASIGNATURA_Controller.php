@@ -96,17 +96,27 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 				exit(0);
 		}
     break;
-
+	
+	case 'vistaeliminar':
+		if (!tienePermisos('ASIGNATURA_DELETE')) {
+					new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
+        } else {
+					$asignatura = get_data_form();
+					$datos = $asignatura->Ver( $_REQUEST['id'] );
+					require_once '../Views/ASIGNATURA_DELETE_Vista.php';
+					new ASIGNATURA_DELETE($datos, "../Controllers/ASIGNATURA_Controller.php");
+		}
+    break;
 
     case 'eliminar':
 		if (!tienePermisos('ASIGNATURA_DELETE')) {
 					new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
         } else {
 					$asignatura = get_data_form();
-					$datos = $asignatura->Borrar( $_REQUEST['id'] );
+					$asignatura->Borrar( $_REQUEST['id'] );
 					$datos = $asignatura->Listar();
 					require_once '../Views/ASIGNATURA_SHOWALL_Vista.php';
-					new ASIGNATURA_SHOW($datos, "../Controllers/ASIGNATURA_Controller.php");
+					new ASIGNATURA_SHOWALL($datos, "../Controllers/ASIGNATURA_Controller.php");
 		}
     break;
     
@@ -114,12 +124,13 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
       
 	    $asignatura = get_data_form();
         $datos = $asignatura->Listar();
+		$tipoUsuario = ConsultarTipoUsuarioLogin();
 	
-        if (!tienePermisos('ASIGNATURA_SHOW')) {
+        if (!tienePermisos('ASIGNATURA_SHOWALL')) {
             new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
         } else {
 			require_once '../Views/ASIGNATURA_SHOWALL_Vista.php';
-            new ASIGNATURA_SHOW($datos, '../Views/ASIGNATURA_SHOWALL_Vista.php');
+            new ASIGNATURA_SHOWALL($datos, $tipoUsuario,  '../Views/ASIGNATURA_SHOWALL_Vista.php');
         }
 }
 
