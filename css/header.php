@@ -28,7 +28,7 @@
                         <div class="container-fluid">
                             <div class="navbar-header">
                                 <div class="navbar-brand">
-                                    <a href="../index.php"><img src="../img/LogoUO.png" width="350" height="150"></a>
+                                    <img src="../img/LogoUO.png" width="350" height="150">
                                 </div>
                             </div>
                             <div>
