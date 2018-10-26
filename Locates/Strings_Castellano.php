@@ -4,8 +4,7 @@
 $strings = array(
 
 //MENSAJES BASE DE DATOS
- 'deportista'=>'deportista',
-'Fallo al conectar a MySQL: (' => 'Fallo al conectar a MySQL: (',
+ 'Fallo al conectar a MySQL: (' => 'Fallo al conectar a MySQL: (',
  'La contraseña para este usuario es errónea' => 'La contraseña para este usuario es errónea',
  'El usuario no existe' => 'El usuario no existe',
  'No se ha podido conectar con la base de datos' => 'No se ha podido conectar con la base de datos',
@@ -15,52 +14,28 @@ $strings = array(
  'Error en la consulta sobre la base de datos' => 'Error en la consulta sobre la base de datos',
  'El usuario se ha modificado con éxito' => 'El usuario se ha modificado con éxito',
  'El usuario ha sido borrado correctamente' => 'El usuario ha sido borrado correctamente',
- 'Solicitud aceptada' => 'Solicitud aceptada',
- 'Solicitud rechazada' => 'Solicitud rechazada',
- 'No hay plazas para esa actividad' => 'No hay plazas para esa actividad',
- 'No existe la inscripcion' => 'No existe la inscripción',
  'Ya existe un Usuario con ese userName' => 'Ya existe un Usuario con ese User',
  'Ya existe un Usuario con ese DNI' => 'Ya existe un Usuario con ese DNI',
  'Ya existe un Usuario con ese E-mail' => 'Ya existe un Usuario con ese E-mail',
- 'VerTablas' => 'Cursos Asignadas',
- 'La Curso ya ha sido asignada a este usuario' => 'La Curso ya ha sido asignada a este deportista',
- 'La Curso se ha asignado correctamente' => 'La Curso se ha asignado correctamente',
- 'Ya han sido asignadas 5 Cursos para este deportista' => 'Ya han sido asignadas 5 Cursos para este deportista',
- 'Error al aceptar la inscripcion' => 'Error al aceptar la inscripcion',
  'No se ha podido conectar con la base de datos.' => 'No se ha podido conectar con la base de datos.',
  'Error en la consulta sobre la base de datos.' => 'Error en la consulta sobre la base de datos.',
- 'La sesion se ha modificado con éxito' => 'La sesion se ha modificado con éxito',
  'No se puede borrar porque no existe esa Alerta.' => 'No se puede borrar porque no existe esa Alerta.',
  'La Alerta fue borrada con éxito.' => 'La Alerta fue borrada con éxito.',
  'No tienes los permisos necesarios' => 'No tienes los permisos necesarios',
- 'Debe seleccionar una Curso' => 'Debe seleccionar una Curso',
- 'EstadísticasMuevet' => 'Estadísticas del Sistema',
- 'ActividadMas' => 'Actividad/es con más inscritos',
- 'ActividadMenos' => 'Actividad/es con menos inscritos',
- 'PlazasOcupadas' => 'Inscritos',
- 'Ocupacion' => 'Ocupación',
- 'EntrenadorMas' => 'Estudiante/es que imparte más clases',
- 'EntrenadorMenos' => 'Estudiante/es que imparte menos clases',
- 'NumActividadesEntrenador' => 'Número de Actividades impartidas',
- 'DeportistaMas' => 'Deportista con más Calendarios',
+ 'Debe seleccionar un Curso' => 'Debe seleccionar un Curso',
  'NumSesiones' => 'Número de Calendarios',
- 'DeportistaMasActividades' => 'Deportista inscrito en más actividades',
- 'NumActividades' => 'Número de Actividades',
- 'VerInscritos' => 'Inscritos',
 
-//MENU DEFAULTS (LOGIN Y SIN LOGIN)
+//MENU
  'Iniciar Sesion' => 'Iniciar Sesion',
  'Usuario' => 'Usuario',
  'Cerrar Sesión' => 'Cerrar Sesión',
  'Cuenta' => 'Cuenta',
  'Mi Perfil' => 'Mi Perfil',
  'Gestión de Usuarios' => 'Usuarios',
- 'Gestión de Estudiantes' => 'Estudiantes',
  'Gestión de Alertas' => 'Alertas',
  'Gestión de Calendarios' => 'Calendarios',
  'Gestión de Asignaturas' => 'Asignaturas',
  'Gestión de Cursos' => 'Cursos',
- 'MisCursos' => 'Mis Cursos',
     
 //Acciones
  'Volver' => 'Volver',
@@ -69,19 +44,11 @@ $strings = array(
  'Consultar' => 'Consultar',
  'Borrar' => 'Borrar',
  'Ver' => 'Ver',
- 'Consultar' => 'Consultar',
  'Seleccionar' => 'Seleccionar',
- 'AsignarT' => 'Asignar Curso',
- 'SeleccionaTabla' => 'Selecciona las Cursos',
- 'AsignarTablaDeportista' => 'Asignar Cursos a un deportista',
  'Cerrar' => 'Cerrar',
  'Guardar' => 'Guardar',
  'Asignar' => 'Asignar',
- 'Desasignar' => 'Desasignar',
  'ver' => 'ver',
- 'Ver1' => 'Ver1',
- 'VerDeportistas' => 'Ver Deportistas',
- 'InsertarSesion'=>'Finalizar',
  
 //USUARIOS
  'username' => 'Usuario',
@@ -107,8 +74,8 @@ $strings = array(
  'Modificar usuario' => 'Modificar Usuario',
  
 
-//Alerta
- 'idAlerta' => '',
+//Alertas
+ 'idAlerta' => 'ID',
  'fechaHora' => 'Fecha',
  'asuntoAlerta' => 'Asunto',
  'Descripción' => 'Descripción',
@@ -138,6 +105,8 @@ $strings = array(
  'Sunday' => 'Domingo',
  'Anterior Semana' => 'Anterior Semana',
  'Próxima Semana' => 'Próxima Semana',
+ 'Filtrar' => 'Filtrar',
+ 'Examen' => 'Examen:',
  'nombreCalendario' => 'Nombre',
  'idCalendario' => 'ID Calendario',
  'Modificar calendario' => 'Modificar Calendario',
@@ -146,7 +115,7 @@ $strings = array(
  'IniciarSesion' => 'Iniciar Sesión',
  'El calendario se ha modificado con éxito.' => 'El calendario se ha modificado con éxito.',
 
-//GESTION DE Asignaturas
+//Asignaturas
  'nombreAsignatura' => 'Nombre de la Asignatura',
  'asignaturanombreCurso' => 'Nombre Asignatura',
  'descripcionAsignatura' => 'Descripción de la Asignatura',
@@ -158,9 +127,8 @@ $strings = array(
  'asignaturamodificar' => 'Modificar',
  'asignaturaeliminar' => 'Eliminar',
  'Eliminar Asignatura' => 'Eliminar Asignatura',
- 'TAMI' => 'TAMI',
  
-//GESTION DE Cursos
+//Cursos
  'nombreCurso2' => 'Nombre del Curso',
  'descripcionCurso2' => 'Descripción del Curso',
  'cursoname' => 'Nombre del Curso',
@@ -169,10 +137,8 @@ $strings = array(
  'newcurso' => 'Nuevo Curso',
  'obtenerCurso' => 'Importar Curso',
  'asignarcurso' => 'Asignar Asignaturas a Curso',
- 'seleccionaasignaturas' => 'Selecciona Asignaturas (ctrl para varios)',
  'seleccionaCurso' => 'Selecciona el Curso del que quieres importar únicamente sus asignaturas',
  'ó' => 'ó',
- 'seleccionaAsignaturas' => 'Selecciona las Asignaturas si quieres crear un Curso especial',
  'closecurso' => 'Cerrar',
  'cursoname2' => 'Nombre',
  'cursodesc2' => 'Descripción',

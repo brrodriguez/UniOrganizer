@@ -16,44 +16,46 @@ class CURSO_IMPORT {
         $this->render();
     }
 
-    function render() {
+     function render() {
         include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php';
-			echo '<form method="POST" id="frmCursoImportar" action="../Controllers/CURSO_Controller.php?accion=importar">
+		?>
+			<form method="POST" id="frmCursoImportar" action="../Controllers/CURSO_Controller.php?accion=importar">
 				<div class="container">			
 					<div class="form-group row">
-						<label for="example-text-input" class="col-2 col-form-label">' . $strings['nombreCurso'] . '</label>
+						<label for="example-text-input" class="col-2 col-form-label"><?php echo $strings['nombreCurso']; ?></label>
 						<div class="col-10">
 							<input class="form-control" type="text" name="nombreCurso" id="example-text-input" required>
 						</div>
 					</div>
 					
 					<div class="form-group row">
-						<label for="example-text-input" class="col-2 col-form-label">' . $strings['descripcionCurso'] . '</label>
+						<label for="example-text-input" class="col-2 col-form-label"><?php echo $strings['descripcionCurso']; ?></label>
 						<div class="col-10">
 							<input class="form-control" type="text" name="descripcionCurso" id="example-text-input" required>
 						</div>
 					</div>
 					
 					<div class="form-group row">
-						<label for="example-text-input" class="col-2 col-form-label">' . $strings['idCalendario'] . '</label>
+						<label for="example-text-input" class="col-2 col-form-label"><?php echo $strings['idCalendario']; ?></label>
 						<div class="col-10">
-							<input class="form-control" id="example-text-input" name="idCalendario" size="10" type="text" required="true" value="' . $this->idCalendario . '" readonly="true"/>
+							<input class="form-control" id="example-text-input" name="idCalendario" size="10" type="text" required="true" value="<?php echo $this->idCalendario ;?>" readonly="true"/>
 						</div>
-					</div>';
-					echo '<br>';
-					echo '<h4><b>' . $strings['seleccionaCurso'] . '</b></h4>';
-					echo '<select name="curso">';
-						echo '<option value="0"></option>';
-						echo '<option value="1">1 Curso</option>';
-						echo '<option value="2">2 Curso</option>';
-						echo '<option value="3">3 Curso</option>';
-						echo '<option value="4">4 Curso</option>';
-					echo '</select>';
-					echo '<br><br>';
-					echo '<button id = "savefrm" type = "button" class = "btn btn-primary btn-lg btn-block">'.$strings['Guardar']. '</button>';
-				echo '</div>';
-			echo '</form>';
-        
+					</div>
+					<br>
+					<h4><b><?php echo $strings['seleccionaCurso']; ?></b></h4>
+					<select name="curso">
+						<option value="0"></option>
+						<option value="1">1 Curso</option>
+						<option value="2">2 Curso</option>
+						<option value="3">3 Curso</option>
+						<option value="4">4 Curso</option>
+					</select>
+					<br><br>
+					<button type="submit" class="btn btn-primary"><?php echo $strings['Guardar']; ?></button>
+					<a class="form-link" href="<?php echo $this->volver ;?>"><?php echo $strings['Volver']; ?></a>
+				</div>
+			</form>
+        <?php
         include 'footer.php';
         ?>
 

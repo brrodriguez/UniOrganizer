@@ -1,11 +1,10 @@
 <?php
 
-//-------------------------------------------------------
 include_once '../Functions/LibraryFunctions.php';
 
 class USUARIO_Modelo {
 
-//Parámetros de la clase usuario
+//Parámetros de la clase Usuario
     var $username;
     var $password;
 	var $tipoUsuario;
@@ -59,7 +58,7 @@ class USUARIO_Modelo {
         }
     }
 	
-	//Comprueba que el usuario pueda registrarse
+//Comprueba que el usuario pueda registrarse
     function Registro() {
         $this->ConectarBD();
         $sql = "SELECT * FROM USUARIO WHERE username = '" . $this->username . "'";
@@ -72,7 +71,7 @@ class USUARIO_Modelo {
         }
     }
 
-//Insertar usuario
+//Insertar usuario y su correspondiente calendario
     function Insertar() {
         $this->ConectarBD();
         if ($this->username <> '') {
@@ -143,6 +142,7 @@ class USUARIO_Modelo {
         }
     }
 
+//Elimina un usuario del sistema
     function Borrar() {
         $this->ConectarBD();
         $sql = "SELECT * FROM USUARIO WHERE username = '" . $this->username . "'";
@@ -194,6 +194,7 @@ class USUARIO_Modelo {
         }
     }
 	
+//Devuelve el valor del id del calendario asociado al usuario
 	function obtenerCalendario() {
         $this->ConectarBD();
         $sql = "SELECT idCalendario AS id FROM CALENDARIO WHERE username = '" . $this->username . "'";
@@ -206,10 +207,11 @@ class USUARIO_Modelo {
         }
     }
 	
+//Devuelve una lista de los cursos que pertenecen al usuario
 	function listarMisCursos() {
         $this->ConectarBD();
 		$this->idCalendario = $this->obtenerCalendario();
-        $sql = "SELECT * FROM curso WHERE idCalendario = '" . $this->idCakendario . "'";
+        $sql = "SELECT * FROM curso WHERE idCalendario = '" . $this->idCalendario . "'";
         if (!($resultado = $this->mysqli->query($sql))) {
             return 'Error en la consulta sobre la base de datos.';
         } else {
@@ -223,7 +225,28 @@ class USUARIO_Modelo {
         }
     }
 	
-//Comprueba que el CALENDARIO_HORAS pueda loguearse
+//Devuelve una lista con los eventos del calendario de un curso concreto
+	function listarCalendarioHorasPorCurso($idCurso) {
+        $this->ConectarBD();
+		$this->idCalendario = $this->obtenerCalendario();
+        $sql = "SELECT * FROM CALENDARIO_HORAS WHERE idCalendario = '" . $this->idCalendario . "' AND idCurso = '" . $idCurso . "'";
+        
+
+        if (!($resultado = $this->mysqli->query($sql))) {
+            return 'Error en la consulta sobre la base de datos';
+        } else {
+            $toret = array();
+            $i = 0;
+            while ($fila = $resultado->fetch_array()) {
+                $toret[$i] = $fila;
+                $i++;
+            }
+
+            return $toret;
+        }
+    }
+	
+//Devuelve una lista con todos los eventos del calendario del usuario
     function listarCalendarioHoras() {
         $this->ConectarBD();
 		$this->idCalendario = $this->obtenerCalendario();
@@ -244,7 +267,7 @@ class USUARIO_Modelo {
         }
     }
 	
-	//Comprueba que el CALENDARIO_HORAS pueda registrarse
+//Devuelve los datos de un evento del calendario
     function verCalendarioHoras($idCalendarioHoras) {
         $this->ConectarBD();
 		
@@ -259,6 +282,7 @@ class USUARIO_Modelo {
         }
     }
 	
+//Devuelve una lista con todas las asignaturas del sistema
 	function listarAsignaturas() {
         $this->ConectarBD();
 		$this->idCalendario = $this->obtenerCalendario();
@@ -276,6 +300,7 @@ class USUARIO_Modelo {
         }
     }
 	
+//Devuelve una lista con todos los cursos del sistema
 	function listarCursos() {
         $this->ConectarBD();
 		$this->idCalendario = $this->obtenerCalendario();
@@ -293,6 +318,7 @@ class USUARIO_Modelo {
         }
     }
 
+//Devuelve una lista con todas las alertas del sistema
     function listarAlertas() {
         $this->ConectarBD();
 		$this->idCalendario = $this->obtenerCalendario();
@@ -310,6 +336,7 @@ class USUARIO_Modelo {
         }
     }
 	
+//Devuelve una lista con todas las horas posibles
 	function listarHoras() {
         $this->ConectarBD();
         $sql = "SELECT * FROM HORAS_POSIBLES ";
@@ -326,6 +353,7 @@ class USUARIO_Modelo {
         }
     }
 	
+//Devuelve una lista con todos los rangos horarios
 	function listarRangos() {
         $this->ConectarBD();
         $sql = "SELECT * FROM RANGO_HORARIO";
@@ -342,6 +370,7 @@ class USUARIO_Modelo {
         }
     }
 	
+//Devuelve una lista con todos los cuatrimestres
 	function listarCuatrimestres() {
         $this->ConectarBD();
         $sql = "SELECT * FROM HORARIO_CUATRIMESTRE";
@@ -358,19 +387,20 @@ class USUARIO_Modelo {
         }
     }
 	
+//Devuelve los eventos de un dia especificado
 	function get_day($calendarioHoras,$horas,$asignaturas,$cursos,$alertas,$wd,$semana){
 		$i = -1;
 		$array =  array();
 		foreach($horas as $hora => $values){
 			foreach($calendarioHoras as $horaCalendario){
 				if($horaCalendario["idHoraPosible"]==$values["idHoraPosible"]) {
-					if( date('l', strtotime($values["dia"]))==$wd && $semana == date('W', strtotime($values["dia"])) ) {
+					if( date('l', strtotime($values["dia"]))==$wd && $semana == date('W', strtotime($values["dia"])) ) {//Comprueba que son eventos del dia especificado
 						$i++;
 						$array[$i]["horaInicio"] = $values["horaInicio"];
 						$array[$i]["horaFin"] = $values["horaFin"];
 						$array[$i]["fecha"] = $values["dia"];
 						$array[$i]["id"] = $horaCalendario["idCalendarioHoras"];
-						if($horaCalendario["idAsignatura"]!=NULL) {		
+						if($horaCalendario["idAsignatura"]!=NULL) {	//Comprueba que el evento es un examen, si no es una alerta, y carga los datos del evento
 							foreach($asignaturas as $asignatura){		
 								
 								if($asignatura["idAsignatura"]==$horaCalendario["idAsignatura"]) {
@@ -400,6 +430,13 @@ class USUARIO_Modelo {
 										$array[$i]["asuntoAlerta"]=$alerta["asuntoAlerta"];
 										$array[$i]["idAlerta"]=$alerta["idAlerta"];
 									}
+								}
+								foreach($cursos as $curso){
+								
+									if($curso["idCurso"]==$horaCalendario["idCurso"]) {
+										$array[$i]["nombreCurso"]=$curso["nombreCurso"];
+										$array[$i]["idCurso"]=$curso["idCurso"];
+									}	 
 								}
 							}
 						}

@@ -27,10 +27,11 @@
                     <nav class="navbar navbar-default" role="navigation">
                             <div class="navbar-header">
 									<form method="post" action="../Functions/Acceso.php" role="login">
-									<input type="text" name="username" value="<?= $_SESSION['login'] ?>" hidden=true>
-									<input type="password" name="password" value="<?= $_SESSION['pass'] ?>" hidden=true>
-									<input type="text" name="IDIOMA" value="<?= $_SESSION['IDIOMA'] ?>" hidden=true>
-									<button type="submit" name="accion" class="btn btn-lg btn-primary" value="Login"><img src="../img/LogoUO.png" width="250" height="100"/></button>
+										<input type="text" name="username" value="<?= $_SESSION['login'] ?>" hidden=true>
+										<input type="password" name="password" value="<?= $_SESSION['pass'] ?>" hidden=true>
+										<input type="text" name="IDIOMA" value="<?= $_SESSION['IDIOMA'] ?>" hidden=true>
+										<input type="number" name="curso" value=0 hidden=true>
+										<button type="submit" name="accion" class="btn btn-lg btn-primary" value="Login"><img src="../img/LogoUO.png" width="250" height="100"/></button>
 									</form>
                             </div>
                             <div>

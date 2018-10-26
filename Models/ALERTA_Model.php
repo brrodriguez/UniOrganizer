@@ -1,6 +1,5 @@
 <?php
 
-//-------------------------------------------------------
 include '../Functions/LibraryFunctions.php';
 
 class ALERTA_Model {
@@ -26,10 +25,10 @@ class ALERTA_Model {
         }
     }
 
-//Insertar alerta para un usuario
-    function Insertar($fecha, $hora) {
+//Inserta una alerta y su correspondiente evento en el calendario
+    function Insertar($fecha, $hora, $idCurso) {
         $this->ConectarBD();
-        //En el caso de las alertas no hace falta hacer comprobacion de si existe el id puesto que este es incremental
+		
         $sql = "SELECT * FROM ALERTA";
         if (!$result = $this->mysqli->query($sql)) {
             return 'No se ha podido conectar con la base de datos.';
@@ -58,7 +57,7 @@ class ALERTA_Model {
 			
 			$idCalendario = ObtenerCalendario($_SESSION['login']);
 			
-			$sql = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "', NULL, NULL,'" . $idHora . "','" . $idInsertada . "')";
+			$sql = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "', NULL, '" . $idCurso . "','" . $idHora . "','" . $idInsertada . "')";
             if (!($resultado = $this->mysqli->query($sql))) {
 				$sql = "DELETE FROM alerta WHERE idAlerta='" . $idInsertada . "'";
 				$this->mysqli->query($sql);
@@ -68,18 +67,6 @@ class ALERTA_Model {
             return 'Inserción realizada con éxito';
         }
     }
-
-    function ConsultarMailUsuario($username) {
-        $this->ConectarBD();
-        $sql = "SELECT email FROM USUARIO WHERE username ='" . $username . "'";
-        if (!($resultado = $this->mysqli->query($sql))) {
-            return 'No se ha podido conectar con la base de datos.';
-        } else {
-            $result = $resultado->fetch_array();
-            return $result['email'];
-        }
-    }
-
 
 //Consulta todos los usuarios
     function ConsultarUsuarios() {
@@ -100,12 +87,11 @@ class ALERTA_Model {
     }
 
 
-//Devuelve la información de todas las alertas asociadas a este usuario
-//para esto hace falta saber el id del calendario del usuario que está accediendo a la función.
+//Devuelve una lista de todas las alertas asociadas un usuario
     function Listar($idCalendario) {
 
             $this->ConectarBD();
-            $sql = "SELECT idAlerta, asuntoAlerta, descripcionAlerta FROM alerta as A, calendario_horas as C WHERE A.idAlerta=C.idAlerta AND C.idCalendario='" . $idCalendario . "'";
+            $sql = "SELECT A.idAlerta, A.asuntoAlerta, A.descripcionAlerta FROM alerta as A, calendario_horas as C WHERE A.idAlerta=C.idAlerta AND C.idCalendario='" . $idCalendario . "'";
             if (!($resultado = $this->mysqli->query($sql))) {
                 return 'Error en la consulta sobre la base de datos.';
             } else {
@@ -120,8 +106,7 @@ class ALERTA_Model {
         
     }
 	
-	//Devuelve la información de todas las alertas asociadas a este usuario
-//para esto hace falta saber el id del calendario del usuario que está accediendo a la función.
+//Devuelve una lista de todas las alertas
     function ListarTodo() {
 
             $this->ConectarBD();
@@ -140,7 +125,7 @@ class ALERTA_Model {
         
     }
 
-//Funcion para dar de baja una alerta en el sistema.
+//Elimina una alerta del sistema y 
     function Borrar() {
         $this->ConectarBD();
         $sql = "SELECT * FROM alerta WHERE idAlerta= '" . $this->idAlerta . "'";
@@ -156,17 +141,7 @@ class ALERTA_Model {
         }
     }
 
-    function RellenaDatos() {
-        $this->ConectarBD();
-        $sql = "SELECT idAlerta, asuntoAlerta, descripcionAlerta FROM alerta WHERE idAlerta= '" . $this->idAlerta . "'";
-        if (!($resultado = $this->mysqli->query($sql))) {
-            return 'Error en la consulta sobre la base de datos.';
-        } else {
-            $result = $resultado->fetch_array();
-            return $result;
-        }
-    }
-
+//Devuelve los datos de una alerta
     function Ver() {
         $this->ConectarBD();
         $sql = "SELECT * FROM alerta WHERE idAlerta= '" . $this->idAlerta . "'";
@@ -177,26 +152,6 @@ class ALERTA_Model {
             return 'Error en la consulta sobre la base de datos.';
         }
     }
-
-    function Enviar_Email() {
-
-        $cont = 0;
-
-        $this->mail->isSMTP();
-        $this->mail->SMTPAuth = true;
-        $this->mail->SMTPSecure = "ssl";
-        $this->mail->Host = "smtp.gmail.com";
-        $this->mail->Port = 465;
-        $this->mail->username = $this->username;
-        $this->mail->Password = $this->password;
-        $this->mail->setFrom($this->username, $this->ALERTA_NOMBRE_REMITENTE);
-        $this->mail->addReplyTo($this->username, $this->ALERTA_NOMBRE_REMITENTE);
-        $this->mail->Subject = $this->asuntoAlerta;
-        $this->mail->msgHTML($this->descripcionAlerta);
-        $this->mail->CharSet = "UTF-8";
-
-    }
-
 }
 
 ?>

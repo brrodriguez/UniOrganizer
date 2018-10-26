@@ -20,45 +20,44 @@ class CURSO_SHOWALL
     function render()
 	{
         include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php';
-
-		echo '<div class="container">';
-                echo '<br>';
+		?>
+		<div class="container">
+                <br>
 		
-		echo '<a href="?accion=vistaimportar"><button type="button" class="btn btn-primary btn-lg btn-block">'.$strings['obtenerCurso'].'</button></a>';
-		echo '<br>';
-		echo '<a href="?accion=vistainsertar"><button type="button" class="btn btn-primary btn-lg btn-block">'.$strings['newcurso'].'</button></a>';
-		
-		echo'<table class="table">
-			  <thead class="thead-dark">
-				<tr>
-				  <th scope="col">'.$strings['nombreCurso2'].'</th>
-				  <th scope="col">'.$strings['descripcionCurso2'].'</th>
-				  <th scope="col">'.$strings['idCalendario'].'</th>
-				  <th scope="col"></th>
-				  <th scope="col"></th>
-				  <th scope="col"></th>
-				</tr>
-			  </thead><tbody>';
-
+			<a href="?accion=vistaimportar"><button type="button" class="btn btn-primary btn-lg btn-block"><?php echo $strings['obtenerCurso'];?></button></a>
+			<br>
+			<a href="?accion=vistainsertar"><button type="button" class="btn btn-primary btn-lg btn-block"><?php echo $strings['newcurso'];?></button></a>
+			
+			<table class="table">
+				<thead class="thead-dark">
+					<tr>
+					  <th scope="col"><?php echo $strings['nombreCurso2'];?></th>
+					  <th scope="col"><?php echo $strings['descripcionCurso2'];?></th>
+					  <th scope="col"><?php echo $strings['idCalendario'];?></th>
+					  <th scope="col"></th>
+					  <th scope="col"></th>
+					  <th scope="col"></th>
+					</tr>
+				</thead>
+				<tbody>
+		<?php
 		foreach($this->datos as $valor)
-		{
-			echo '<tr>';
-			echo '<th><a href="?accion=ver&id='.$valor['0'].'">'.$valor['1'].'</a></th>';
-			echo '<td>'.$valor['2'].'</td>';
-            echo '<td>'.$valor['3'].'</td>';
+		{?>
+					<tr>
+						<th><a href="?accion=ver&id=<?php echo $valor['0'];?>"><?php echo $valor['1'];?></a></th>
+						<td><?php echo $valor['2'];?></td>
+						<td><?php echo $valor['3'];?></td>
 
-				echo '<td><a href="?accion=vistaasignar&id='.$valor['0'].'"><button type="button" class="btn btn-success">'.$strings['AsignarAsignaturas']. '</button></a></td>';
-				echo '<td><a href="?accion=vistamodificar&id='.$valor['0'].'"><button type="button" class="btn btn-primary">'.$strings['cursomodificar'].'</button></a></td>';
-				echo '<td><a href="?accion=vistaeliminar&id='.$valor['0'].'"><button type="button" class="btn btn-danger">'.$strings['cursoeliminar'].'</button></a></td>';
-
-			echo '</tr>';
+						<td><a href="?accion=vistaasignar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-success"><?php echo $strings['AsignarAsignaturas'];?></button></a></td>
+						<td><a href="?accion=vistamodificar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-primary"><?php echo $strings['cursomodificar'];?></button></a></td>
+						<td><a href="?accion=vistaeliminar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-danger"><?php echo $strings['cursoeliminar'];?></button></a></td>
+					</tr><?php
 		}			
-				
-	
-		echo '</tbody>
-			</table>';	
-		echo '</div>';
-		
+				?>
+				</tbody>
+			</table>
+		</div>
+		<?php
 
         include '../Views/footer.php';
     }

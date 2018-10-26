@@ -61,8 +61,13 @@ class USUARIO_SELECT_SHOW {
 				
                 
                 <br>
-
+				<?php
+				if($this->valores['tipoUsuario'] == 1){
+				?>
                 <a class="form-link" href='<?php echo $this->volver ?> '><?php echo $strings['Volver']; ?> </a>
+				<?php
+				}
+				?>
             </form>
 
         </div>

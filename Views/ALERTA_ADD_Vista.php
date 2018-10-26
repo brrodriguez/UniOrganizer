@@ -9,10 +9,11 @@
 
 class ALERTA_Insertar {
 
-
+	private $cursos;
     private $volver;
 
-    function __construct( $volver) {
+    function __construct( $cursos, $volver) {
+		$this->cursos = $cursos;
         $this->volver = $volver;
         $this->render();
     }
@@ -35,7 +36,7 @@ class ALERTA_Insertar {
 
                <div class="form-group">
                     <label class="control-label" ><?php echo $strings['descripcionAlerta']; ?></label><br>
-                    <textarea class="form" id="descripcionAlerta" name="descripcionAlerta" rows="20" cols="70" required="true"></textarea>
+                    <textarea class="form" id="descripcionAlerta" name="descripcionAlerta" rows="10" cols="70" required="true"></textarea>
                 </div>
 				
 				<div class="form-group">
@@ -49,6 +50,16 @@ class ALERTA_Insertar {
                 </div>
 				
 				<div class="form-group">
+					<select name="curso">
+						<?php
+						foreach($this->cursos as $curso){
+							?><option value="<?php echo $curso['nombreCurso'] ?>"><?php echo $curso['nombreCurso']; ?></option><?php
+						}
+						?>
+					</select>
+                </div>
+				
+				<div class="form-group">
                     <input type="hidden" id="username" name="username" size="25" type="text" required="true" value='usuario'/>
                 </div>
 				
@@ -56,7 +67,7 @@ class ALERTA_Insertar {
 				
 				<div class="form-group">
                     <label class="control-label" ><?php echo $strings['Dias']; ?></label><br>
-                    <input class="form" id="dias" name="dias" type="text" required="false"/>
+                    <input class="form" id="dias" name="dias" type="text"/>
                 </div>
 				
                 <input type='submit' onclick="" name='accion'  value="<?php echo $strings['Crear']; ?>">
