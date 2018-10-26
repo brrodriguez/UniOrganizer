@@ -1,7 +1,7 @@
 <?php
 class Mensaje2 {
 
-//VISTA PARA MOSTRAR AVISOS Y MENSAJES
+//VISTA PARA MOSTRAR AVISOS Y MENSAJES ESPECÍFICOS
     private $string;
     private $volver;
 
@@ -24,6 +24,4 @@ class Mensaje2 {
         <?php
         include '../Views/footer.php';
     }
-
-//fin metodo render
 }

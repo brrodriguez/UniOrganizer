@@ -1,5 +1,5 @@
 <?php
-
+//Controlador para gestion del registro
 include '../Models/USUARIO_Model.php';
 include '../Views/MENSAJE_Vista2.php';
 
@@ -31,7 +31,7 @@ if (isset($_REQUEST['accion'])) {
 		include '../css/header.php';
 		$usuario = get_data_form();
         $respuesta = $usuario->Registro();
-        if ($respuesta == 'true') {
+        if ($respuesta == 'true') {//Comprueba que el usuario se puede registrar y lo inserta
             $respuesta2 = $usuario->Insertar();
 			new Mensaje2($respuesta2, 'DEFAULT_Vista_NoLogin.php');
             header('Location:../index.php');
