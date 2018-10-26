@@ -1,6 +1,6 @@
 <?php
 
-//Controlador para la gestión de asignaturas
+//Controlador para la gestión de cursos
 include '../Models/CURSO_Model.php';
 include '../Models/ASIGNATURA_Model.php';
 include '../Views/MENSAJE_Vista.php';
@@ -76,7 +76,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 			$seleccionadas[] = ""; 
 			$datos['asignaturas'] = extraerAsignaturas();
 			foreach ($datos['asignaturas'] as &$valor) {
-				$asignaturas['selectasignaturas'] .= "<option>" . $valor . "</option>";
+				$asignaturas['selectasignaturas'] .= "<option>" . $valor . "</option>";//Se crea un <option> para cada asignatura extraida
 			}
             new CURSO_IMPORT($asignaturas, $seleccionadas, '../Controllers/CURSO_Controller.php', $idCalendario );
         }
@@ -90,64 +90,100 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 			if($_REQUEST['curso'] === "0") {	
 				new Mensaje('No se importó correctamente porque no se seleccionó ningún curso', '../Views/DEFAULT_Vista.php');
 			}else{
-				$curso = get_data_form();
-				$curso->insertarCurso();
-				$idCurso = obtenerUltimoCurso();
-				if($_REQUEST['curso'] === "1") {	
+				if($_REQUEST['curso'] === "1") {
+					$curso = get_data_form();
+					$curso->insertarCurso();
+					$idCurso = obtenerUltimoCurso();
 					$primero = extraerCursos(1);
+					$examenes1 = extraerExamenesPrimero();	
 					foreach ($primero as $key => $value) {
-						$existe = asignaturaNoExiste($value);
-						if($existe == 0){
+						if(!(obtenerIdAsignatura($value))){//Se comprueba si las asignaturas extraídas ya existen en el sistema y si no se crean
 							$asignatura = new ASIGNATURA_Model("", $value, "");
 							$asignatura->Insertar();
 						}
 						$idAsignatura = obtenerIdAsignatura($value);
-						$curso->asignarAsignatura($idCurso, $idAsignatura);			
+						$curso->asignarAsignatura($idCurso, $idAsignatura);
+						foreach($examenes1 as $examen){
+								$idAsig = obtenerIdAsignatura($examen[1]);
+								if($idAsig===$idAsignatura){//Se obtienen los datos de los exámenes para cada asignatura seleccionada
+									$datos1 = preg_split('/\s/', $examen[2]);
+									$datos2 = preg_split('/\s/', $examen[3]);
+									$datos3 = preg_split('/\s/', $examen[4]);
+									$curso->crearExamenes($idCurso, $idAsignatura, $datos1, $datos2, $datos3);
+								}								
+						}
 					}
-				}else{
-					$curso = get_data_form();
-					$curso->insertarCurso();
-					$idCurso = obtenerUltimoCurso();
-					if($_REQUEST['curso'] === "2") {	
+				}else{			
+					if($_REQUEST['curso'] === "2") {
+						$curso = get_data_form();
+						$curso->insertarCurso();
+						$idCurso = obtenerUltimoCurso();
 						$segundo = extraerCursos(2);
+						$examenes2 = extraerExamenesSegundo();
 						foreach ($segundo as $key => $value) {
-							$existe = asignaturaNoExiste($value);
-							if($existe == 0){
+							if(!(obtenerIdAsignatura($value))){
 								$asignatura = new ASIGNATURA_Model("", $value, "");
 								$asignatura->Insertar();
 							}
 							$idAsignatura = obtenerIdAsignatura($value);
 							$curso->asignarAsignatura($idCurso, $idAsignatura);
+							foreach($examenes2 as $examen){
+								$idAsig = obtenerIdAsignatura($examen[1]);
+								if($idAsig===$idAsignatura){
+									$datos1 = preg_split('/\s/', $examen[2]);
+									$datos2 = preg_split('/\s/', $examen[3]);
+									$datos3 = preg_split('/\s/', $examen[4]);
+									$curso->crearExamenes($idCurso, $idAsignatura, $datos1, $datos2, $datos3);
+								}								
+							}	
 						}
 					}else{
-						$curso = get_data_form();
-						$curso->insertarCurso();
-						$idCurso = obtenerUltimoCurso();
-						if($_REQUEST['curso'] === "3") {	
+						if($_REQUEST['curso'] === "3") {
+							$curso = get_data_form();
+							$curso->insertarCurso();
+							$idCurso = obtenerUltimoCurso();
 							$tercero = extraerCursos(3);
+							$examenes3 = extraerExamenesTercero();
 							foreach ($tercero as $key => $value) {
-								$existe = asignaturaNoExiste($value);
-								if($existe == 0){
+								if(!(obtenerIdAsignatura($value))){
 									$asignatura = new ASIGNATURA_Model("", $value, "");
 									$asignatura->Insertar();
 								}
 								$idAsignatura = obtenerIdAsignatura($value);
-								$curso->asignarAsignatura($idCurso, $idAsignatura);				
+								$curso->asignarAsignatura($idCurso, $idAsignatura);
+								foreach($examenes3 as $examen){
+								$idAsig = obtenerIdAsignatura($examen[1]);
+								if($idAsig===$idAsignatura){
+									$datos1 = preg_split('/\s/', $examen[2]);
+									$datos2 = preg_split('/\s/', $examen[3]);
+									$datos3 = preg_split('/\s/', $examen[4]);
+									$curso->crearExamenes($idCurso, $idAsignatura, $datos1, $datos2, $datos3);
+								}								
+							}	
 							}
 						}else{
-							$curso = get_data_form();
-							$curso->insertarCurso();
-							$idCurso = obtenerUltimoCurso();
-							if($_REQUEST['curso'] === "4") {	
+							if($_REQUEST['curso'] === "4") {
+								$curso = get_data_form();
+								$curso->insertarCurso();
+								$idCurso = obtenerUltimoCurso();
 								$cuarto = extraerCursos(4);
+								$examenes4 = extraerExamenesCuarto();
 								foreach ($cuarto as $key => $value) {								
-									$existe = asignaturaNoExiste($value);						
-									if($existe === 0){
+									if(!(obtenerIdAsignatura($value))){
 										$asignatura = new ASIGNATURA_Model("", $value, "");
 										$asignatura->Insertar();
 									}
 									$idAsignatura = obtenerIdAsignatura($value);
 									$curso->asignarAsignatura($idCurso, $idAsignatura);
+									foreach($examenes4 as $examen){
+										$idAsig = obtenerIdAsignatura($examen[1]);
+										if($idAsig===$idAsignatura){
+											$datos1 = preg_split('/\s/', $examen[2]);
+											$datos2 = preg_split('/\s/', $examen[3]);
+											$datos3 = preg_split('/\s/', $examen[4]);
+											$curso->crearExamenes($idCurso, $idAsignatura, $datos1, $datos2, $datos3);
+										}								
+									}		
 								}
 							}
 						}
@@ -182,7 +218,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 			$curso = get_data_form();
 			$listaAsignaturas = extraerAsignaturas();
 			foreach ($listaAsignaturas as $key => $value) {													
-				if(!(obtenerIdAsignatura($value))){
+				if(!(obtenerIdAsignatura($value))){//Se comprueba si las asignaturas extraídas ya existen en el sistema y si no se crean
 					$asignatura = new ASIGNATURA_Model("", $value, "");
 					$asignatura->Insertar();
 				}
@@ -190,7 +226,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 			$asignatura = new ASIGNATURA_Model("", "", "");
 			$asig = $asignatura->Listar();
 			$datos['selectasignaturas'] = "";
-			foreach ($asig as &$valor) {
+			foreach ($asig as $valor) {
 				$datos['selectasignaturas'] .= "<option value=" . $valor['idAsignatura'] . ">" . $valor['nombreAsignatura'] . "</option>";
 			}
             $otros['curso'] = $curso->obtenerCursoDetalle($_REQUEST['id']);
@@ -202,7 +238,11 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 
     case 'asignar':
 
-        //Recorremos todas las filas de 4 en 4
+		$examenes1 = extraerExamenesPrimero();	
+		$examenes2 = extraerExamenesSegundo();
+		$examenes3 = extraerExamenesTercero();
+		$examenes4 = extraerExamenesCuarto();
+        //Recorremos todas las filas de 1 en 1
         $asign_data = $_POST;
         $curso = get_data_form();
         $asign_data_formated = array_chunk($asign_data, 1, false);
@@ -212,6 +252,42 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
             // Orden del Array
             // 0 - Id de Asignatura
             $curso->asignarAsignatura($_REQUEST['idCurso'], $value[0]);
+			foreach($examenes1 as $examen){//Se obtienen los datos de los exámenes para cada asignatura seleccionada
+				$idAsig = obtenerIdAsignatura($examen[1]);
+				if($idAsig===$value[0]){
+					$datos1 = preg_split('/\s/', $examen[2]);
+					$datos2 = preg_split('/\s/', $examen[3]);
+					$datos3 = preg_split('/\s/', $examen[4]);
+					$curso->crearExamenes($_REQUEST['idCurso'], $idAsig, $datos1, $datos2, $datos3);
+				}								
+			}	
+			foreach($examenes2 as $examen){
+				$idAsig = obtenerIdAsignatura($examen[1]);
+				if($idAsig===$value[0]){
+					$datos1 = preg_split('/\s/', $examen[2]);
+					$datos2 = preg_split('/\s/', $examen[3]);
+					$datos3 = preg_split('/\s/', $examen[4]);
+					$curso->crearExamenes($_REQUEST['idCurso'], $idAsig, $datos1, $datos2, $datos3);
+				}								
+			}	
+			foreach($examenes3 as $examen){
+				$idAsig = obtenerIdAsignatura($examen[1]);
+				if($idAsig===$value[0]){
+					$datos1 = preg_split('/\s/', $examen[2]);
+					$datos2 = preg_split('/\s/', $examen[3]);
+					$datos3 = preg_split('/\s/', $examen[4]);
+					$curso->crearExamenes($_REQUEST['idCurso'], $idAsig, $datos1, $datos2, $datos3);
+				}								
+			}
+			foreach($examenes4 as $examen){
+				$idAsig = obtenerIdAsignatura($examen[1]);
+				if($idAsig===$value[0]){
+					$datos1 = preg_split('/\s/', $examen[2]);
+					$datos2 = preg_split('/\s/', $examen[3]);
+					$datos3 = preg_split('/\s/', $examen[4]);
+					$curso->crearExamenes($_REQUEST['idCurso'], $idAsig, $datos1, $datos2, $datos3);
+				}								
+			}			
         }
         echo '<script> location.replace("../Controllers/CURSO_Controller.php"); </script>';
         exit(0);
@@ -223,7 +299,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
             new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
         } else {
             $curso = get_data_form();
-            $curso->desasignarAsignatura($_REQUEST['idCurso'], $_REQUEST['nombreAsignatura']);
+            $curso->desasignarAsignatura($_REQUEST['idCurso'], $_REQUEST['idAsignatura']);
             echo '<script> location.replace("../Controllers/CURSO_Controller.php"); </script>';
             exit(0);
         }
@@ -293,14 +369,14 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
     default: 
 
          if (ConsultarTipoUsuario($_SESSION['login']) != 2) {
-
+			//Carga una vista con todos los cursos al ser administrador
 			$curso = new CURSO_Model("", "", "", "");
             $datos = $curso->obtenerCursos();
 
             require_once '../Views/CURSO_SHOWALL_Vista.php';
             new CURSO_SHOWALL($datos, '../Controllers/CURSO_Controller.php');
         } else {
-            //Si no, cargaría una vista exactamente igual pero solo vería sus cursos asignadas
+            //Si no, cargaría una vista exactamente igual pero solo vería sus cursos
             $curso = get_data_form();
 			$curso = new CURSO_Model("", "", "", "");
 			$id = ObtenerCalendario($_SESSION['login']);

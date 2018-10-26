@@ -1,6 +1,7 @@
 <?php
-
+//Controlador para la gestión de alertas
 include '../Models/ALERTA_Model.php';
+include '../Models/USUARIO_Model.php';
 include '../Views/MENSAJE_Vista.php';
 
 
@@ -31,7 +32,7 @@ function get_data_form() {
     return $alerta;
 }
 
-switch ($_REQUEST['accion']) {
+switch ($_REQUEST['accion']) { //Actúa según la acción elegida
     case $strings['Crear']:
 
         case $strings['Crear']:
@@ -39,12 +40,14 @@ switch ($_REQUEST['accion']) {
             new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
         } else {
             if (!isset($_REQUEST['username'])) {
-				
-                $alerta = new ALERTA_Model('', '', '');                 
-                new ALERTA_Insertar( '../Controllers/ALERTA_Controller.php');
+				$usuario = new USUARIO_Modelo($_SESSION['login'], $_SESSION['pass'], '', '', '', '', '', '', '', '');
+				$cursos = $usuario->listarMisCursos();              
+                new ALERTA_Insertar( $cursos, '../Controllers/ALERTA_Controller.php');
                 
 
             } else {
+				//Se transforma algún dato para obtener el formato correcto y se crean las alertas
+				$idCurso = obtenerIdCurso($_REQUEST['curso']);
 				$fecha = $_REQUEST['fecha'];
 				$menos = '-';
 				$dias = $_REQUEST['dias'];
@@ -53,12 +56,15 @@ switch ($_REQUEST['accion']) {
 				$nuevafecha = strtotime ( $dia , strtotime ( $fecha ) ) ;
 				$nuevafecha = date ( 'Y-m-j' , $nuevafecha );
 				$alerta = new ALERTA_Model( '', $_REQUEST['asuntoAlerta'], $_REQUEST['descripcionAlerta']);
-                $respuesta = $alerta->Insertar($_REQUEST['fecha'], $_REQUEST['hora']);
-				$aviso1 = "AVISO: ";
-				$aviso2 = " dias para ";
-				$asunto = $aviso1 . $dias . $aviso2;
-                $alerta2 = new ALERTA_Model( '', $asunto, $_REQUEST['descripcionAlerta']);
-				$alerta2->Insertar($nuevafecha, $_REQUEST['hora']);
+                $respuesta = $alerta->Insertar($_REQUEST['fecha'], $_REQUEST['hora'], $idCurso);
+				//Si se incluye en campo de Dias, se crea un aviso con x días de antelación
+				if($dias!=NULL){
+					$aviso1 = "AVISO: ";
+					$aviso2 = " dias para ";
+					$asunto = $aviso1 . $dias . $aviso2;
+					$alerta2 = new ALERTA_Model( '', $asunto, $_REQUEST['descripcionAlerta']);
+					$alerta2->Insertar($nuevafecha, $_REQUEST['hora'], $idCurso);
+				}
                 new Mensaje($respuesta, '../Controllers/ALERTA_Controller.php');
             }
         }
@@ -85,8 +91,6 @@ switch ($_REQUEST['accion']) {
         }
         break;
 
-    //En el caso de que quiera consultar una alerta en concreto creo la alerta solo con el id que va a venir de la vista,
-    //llamo a la funcion que obtiene los datos sobre esa alerta y creo una vista showcurrent mostrando los datos y con el controlador de las alertas.
     case $strings['Ver']:
 		
 		if (!tienePermisos('ALERTA_Ver')) {
@@ -107,32 +111,6 @@ switch ($_REQUEST['accion']) {
             }
             
         }
-        if (!tienePermisos('ALERTA_Seleccionar')) {
-            new Mensaje('No tienes los permisos necesarios', '../Controllers/ALERTA_Controller.php');
-        } else {
-            if (!isset($_REQUEST['idAlerta'])) {
-                
-            } else {
-                if(!isset($_REQUEST['usuario']))
-                {
-                    $_REQUEST['usuario'] = "Otro";
-                }
-                if($_REQUEST['usuario']=="envio")
-                {
-                $idAlerta = $_REQUEST['idAlerta'];
-                $alerta = new ALERTA_Model($idAlerta, '', '');
-                $resultado = $alerta->Ver();
-                new ALERTA_Seleccionar($resultado, '../Controllers/ALERTA_Controller.php');
-                }
-                else
-                {
-                $idAlerta = $_REQUEST['idAlerta'];
-                $alerta = new ALERTA_Model($idAlerta, '', '');
-                $resultado = $alerta->Ver();
-                new ALERTA_Seleccionar($resultado, '../Controllers/ALERTA_Controller.php');
-                }
-            }
-        }
         break;
 
     //Por defecto se realiza un show all de las alertas a las que tiene acceso el usuario.
@@ -149,7 +127,7 @@ switch ($_REQUEST['accion']) {
 				new ALERTA_Listar($datos, '../Controllers/ALERTA_Controller.php');
 				
 			}else{ 
-			
+				
 				$idCalendario = ObtenerCalendario($_SESSION['login']);
 				$alerta = new ALERTA_Model('', '', '');
 				$datos = $alerta->Listar($idCalendario);				

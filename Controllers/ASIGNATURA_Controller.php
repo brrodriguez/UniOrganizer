@@ -1,5 +1,5 @@
 <?php
-//Controlador para la gestión de ejercicios
+//Controlador para la gestión de asignaturas
 include '../Models/ASIGNATURA_Model.php';
 include '../Views/MENSAJE_Vista.php';
 
@@ -33,14 +33,7 @@ function get_data_form()
 		$nombreAsignatura = "";
 	}
 	
-	if( isset($_REQUEST['descripcionAsignatura']) )
-	{
-		$descripcionAsignatura =$_REQUEST['descripcionAsignatura'];
-	}else{ 
-		$descripcionAsignatura = ""; 
-	}
-	
-	$asignatura = new ASIGNATURA_Model( $idAsignatura, $nombreAsignatura, $descripcionAsignatura);
+	$asignatura = new ASIGNATURA_Model( $idAsignatura, $nombreAsignatura);
 	return $asignatura;
 }
 
@@ -71,31 +64,6 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 				exit(0);
 		}
     break;
-
-
-
-
-    case 'modificar':
-		if (!tienePermisos('ASIGNATURA_EDIT')) {
-				new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
-        } else {
-				$asignatura = get_data_form();
-				$datos = $asignatura->VerDetalle( $_REQUEST['id'] );
-				require_once '../Views/ASIGNATURA_EDIT_Vista.php';
-				new ASIGNATURA_EDIT($datos, "../Controllers/ASIGNATURA_Controller.php");
-		}
-    break;
-	
-	case 'guardarmod':
-		if (!tienePermisos('ASIGNATURA_EDIT')) {
-				new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
-        } else {
-				$asignatura = get_data_form();
-				$datos = $asignatura->Modificar( $_REQUEST['id'] );
-				echo '<script> location.replace("../Controllers/ASIGNATURA_Controller.php"); </script>';
-				exit(0);
-		}
-    break;
 	
 	case 'vistaeliminar':
 		if (!tienePermisos('ASIGNATURA_DELETE')) {
@@ -115,8 +83,9 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 					$asignatura = get_data_form();
 					$asignatura->Borrar( $_REQUEST['id'] );
 					$datos = $asignatura->Listar();
+					$tipoUsuario = ConsultarTipoUsuario($_SESSION['login']);
 					require_once '../Views/ASIGNATURA_SHOWALL_Vista.php';
-					new ASIGNATURA_SHOWALL($datos, "../Controllers/ASIGNATURA_Controller.php");
+					new ASIGNATURA_SHOWALL($datos, $tipoUsuario, "../Controllers/ASIGNATURA_Controller.php");
 		}
     break;
     
