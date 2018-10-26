@@ -15,35 +15,40 @@ class CURSO_ASIGN {
 
     function render() {
         include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php';
-        echo '<form method="POST" action="?accion=asignar&id=' . $_GET["id"] . '" id="frmCursoAsignaturas"';
-        echo '<div class="container">
-                <h4> <b>' . $strings['nombreCurso'] . ': </b>' . $this->otros['curso']['nombreCurso'] . '</h4>                            
-				<h5> <b>' . $strings['descripcionCurso'] . ': </b>' . $this->otros['curso']['descripcionCurso'] . '</</h5>';
-        echo '<br><br><br><br>
-        <button id = "savefrm" type = "button" class = "btn btn-primary btn-lg btn-block">'.$strings['Guardar']. '</button>';
-        echo '<br>';
-        echo '<button type = "button" class = "btn btn-success" id = "addrow">'.$strings['AñadirAsignatura']. '</button>
-<div class="container">
-        <h5><table class = "table" id = "tblAsignaturas">
-        <thead class = "thead-dark">
-        <tr>
-        <th scope = "col">'.$strings['nombreAsignatura']. '</th>
-		<th scope = "col">'.$strings['descripcionAsignatura']. '</th>
-        <th scope = "col"></th>
-        </tr>
-        </thead><tbody>';
-        foreach ($this->otros['asignaturas'] as $valor) {
-            echo '<tr>';
-            echo '<th>' . $valor['nombreAsignatura'] . '</th>';
-			echo '<td>' . $valor['descripcionAsignatura'] . '</td>';
-
-            echo '</tr>';
-        }
-
-        echo ' </tbody>
-        </table>';
-        echo '</form>';
-        echo '</div>';
+		?>
+        <form method="POST" action="?accion=asignar&idCurso=<?php echo $_GET["id"];?>" id="frmCursoAsignaturas">
+			<div class="container">
+				<h4> <b><?php echo $strings['nombreCurso'];?>: </b><?php echo $this->otros['curso']['nombreCurso'];?></h4>                            
+				<h5> <b><?php echo $strings['descripcionCurso'];?>: </b><?php echo $this->otros['curso']['descripcionCurso'];?></</h5>
+				<br><br>
+				<button type = "button" class = "btn btn-success" id = "addrow"><?php echo $strings['AñadirAsignatura'];?></button>
+				<div class="container">
+					<h5><table class = "table" id = "tblAsignaturas">
+						<thead class = "thead-dark">
+							<tr>
+								<th scope = "col" bgcolor="#C0C0C0"><?php echo $strings['nombreAsignatura'];?></th>
+								<th scope = "col"></th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+						foreach ($this->otros['asignaturas'] as $valor) {
+							?>
+							<tr>
+								<th><?php echo $valor['nombreAsignatura'];?></th>
+								
+							</tr><?php
+						}
+						?>
+						</tbody>
+					</table>
+				</div>
+				<br><br><br><br>
+				<button id = "savefrm" type = "button" class = "btn btn-primary btn-lg btn-block"><?php echo $strings['Guardar'];?></button>
+				<br>
+			</div>
+		</form>
+        <?php
         include 'footer.php';
         ?>
 

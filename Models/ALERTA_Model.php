@@ -1,24 +1,19 @@
 <?php
 
-//-------------------------------------------------------
 include '../Functions/LibraryFunctions.php';
 
 class ALERTA_Model {
 
 //Parámetros de la clase Alerta
     var $idAlerta;
-    var $fechaHora;
     var $asuntoAlerta;
     var $descripcionAlerta;
-    var $idCalendario;
     var $mysqli;
 
-    function __construct($idAlerta, $fechaHora, $asuntoAlerta, $descripcionAlerta, $idCalendario) {
+    function __construct($idAlerta, $asuntoAlerta, $descripcionAlerta) {
         $this->idAlerta = $idAlerta;
-        $this->fechaHora = $fechaHora;
         $this->asuntoAlerta = $asuntoAlerta;
         $this->descripcionAlerta = $descripcionAlerta;
-        $this->idCalendario = $idCalendario;
     }
 
 //Función para conectarnos a la Base de datos
@@ -30,69 +25,48 @@ class ALERTA_Model {
         }
     }
 
-//Insertar alerta para un usuario
-    function Insertar() {
+//Inserta una alerta y su correspondiente evento en el calendario
+    function Insertar($fecha, $hora, $idCurso) {
         $this->ConectarBD();
-        //En el caso de las alertas no hace falta hacer comprobacion de si existe el id puesto que este es incremental
+		
         $sql = "SELECT * FROM ALERTA";
         if (!$result = $this->mysqli->query($sql)) {
             return 'No se ha podido conectar con la base de datos.';
         } else {
-
-            $sql = "INSERT INTO alerta( fechaHora, asuntoAlerta, descripcionAlerta, idCalendario) VALUES ('" . $this->fechaHora . "','" . $this->asuntoAlerta . "','" . $this->descripcionAlerta . "','" . $this->idCalendario . "')";
-            $this->mysqli->query($sql);
+			
+			$sql = "INSERT INTO alerta( asuntoAlerta, descripcionAlerta) VALUES ('" . $this->asuntoAlerta . "','" . $this->descripcionAlerta . "')";
+			if (!($resultado = $this->mysqli->query($sql))) {
+				return 'Error en insert alerta.';
+			}
+			
+			$sql = "SELECT MAX(idAlerta) AS id FROM alerta";
+			if (!($resultado = $this->mysqli->query($sql))) {
+				return 'No se ha podido conectar con la base de datos en MAX.';
+			} else {
+				$result = $resultado->fetch_array();
+				$idInsertada = $result['id'];
+			}
+			
+			$sql = "SELECT idHoraPosible AS id FROM horas_posibles WHERE dia='" . $fecha . "' AND horaInicio='" . $hora . "'";
+			if (!($resultado = $this->mysqli->query($sql))) {
+				return 'No se ha podido conectar con la base de datos en SELECT idHora.';
+			} else {
+				$result = $resultado->fetch_array();
+				$idHora = $result['id'];
+			}
+			
+			$idCalendario = ObtenerCalendario($_SESSION['login']);
+			
+			$sql = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "', NULL, '" . $idCurso . "','" . $idHora . "','" . $idInsertada . "')";
+            if (!($resultado = $this->mysqli->query($sql))) {
+				$sql = "DELETE FROM alerta WHERE idAlerta='" . $idInsertada . "'";
+				$this->mysqli->query($sql);
+				return 'No se ha podido conectar con la base de datos en INSERT calendario_horas.';
+			}
         
             return 'Inserción realizada con éxito';
         }
     }
-
-    function ConsultarMailUsuario($username) {
-        $this->ConectarBD();
-        $sql = "SELECT email FROM USUARIO WHERE username ='" . $username . "'";
-        if (!($resultado = $this->mysqli->query($sql))) {
-            return 'No se ha podido conectar con la base de datos.';
-        } else {
-            $result = $resultado->fetch_array();
-            return $result['email'];
-        }
-    }
-
-    function Consultar() {
-        $this->ConectarBD();
-
-        if ($this->fechaHora == '' && $this->asuntoAlerta == '' && $this->idCalendario == '') { //000
-            $sql = "SELECT idAlerta, fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta ";
-        } else
-        if ($this->fechaHora == '' && $this->asuntoAlerta == '' && $this->idCalendario != '') { //001
-            $sql = "SELECT idAlerta,fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta WHERE idCalendario LIKE '%" . $this->idCalendario . "%'";
-        } else
-        if ($this->fechaHora != '' && $this->asuntoAlerta == '' && $this->idCalendario == '') { //100
-            $sql = "SELECT idAlerta,fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta WHERE  fechaHora LIKE '%" . $this->fechaHora . "%'";
-        } else
-        if ($this->fechaHora != '' && $this->asuntoAlerta == '' && $this->idCalendario != '') { //101
-            $sql = "SELECT idAlerta,fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta WHERE  fechaHora LIKE '%" . $this->fechaHora . "%' AND idCalendario LIKE '%" . $this->idCalendario . "%'";
-        } else if ($this->fechaHora == '' && $this->asuntoAlerta != '' && $this->idCalendario == '') { //010
-            $sql = "SELECT idAlerta,fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta WHERE  asuntoAlerta LIKE '%" . $this->asuntoAlerta . "%'";
-        } else if ($this->fechaHora == '' && $this->asuntoAlerta != '' && $this->idCalendario != '') { //011
-            $sql = "SELECT idAlerta,fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta WHERE  asuntoAlerta LIKE '%" . $this->asuntoAlerta . "%' AND idCalendario LIKE '%" . $this->idCalendario . "%'";
-        } else if ($this->fechaHora != '' && $this->asuntoAlerta != '' && $this->idCalendario == '') { //110
-            $sql = "SELECT idAlerta,fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta WHERE  asuntoAlerta LIKE '%" . $this->asuntoAlerta . "%' AND fechaHora LIKE '%" . $this->fechaHora . "%'";
-        } else if ($this->fechaHora != '' && $this->asuntoAlerta != '' && $this->idCalendario != '') { //111
-            $sql = "SELECT idAlerta,fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta WHERE  asuntoAlerta LIKE '%" . $this->asuntoAlerta . "%' AND fechaHora LIKE '%" . $this->fechaHora . "%' AND idCalendario LIKE '%" . $this->idCalendario . "%'";
-        }
-        if (!($resultado = $this->mysqli->query($sql))) {
-            return 'No se ha podido conectar con la base de datos.';
-        } else {
-            $toret = array();
-            $i = 0;
-            while ($fila = $resultado->fetch_array()) {
-                $toret[$i] = $fila;
-                $i++;
-            }
-            return $toret;
-        }
-    }
-
 
 //Consulta todos los usuarios
     function ConsultarUsuarios() {
@@ -113,12 +87,11 @@ class ALERTA_Model {
     }
 
 
-//Devuelve la información de todas las alertas asociadas a este usuario
-//para esto hace falta saber el id del calendario del usuario que está accediendo a la función.
+//Devuelve una lista de todas las alertas asociadas un usuario
     function Listar($idCalendario) {
 
             $this->ConectarBD();
-            $sql = "SELECT idAlerta, fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta WHERE idCalendario ='" . $idCalendario . "' ORDER BY fechaHora DESC";
+            $sql = "SELECT A.idAlerta, A.asuntoAlerta, A.descripcionAlerta FROM alerta as A, calendario_horas as C WHERE A.idAlerta=C.idAlerta AND C.idCalendario='" . $idCalendario . "'";
             if (!($resultado = $this->mysqli->query($sql))) {
                 return 'Error en la consulta sobre la base de datos.';
             } else {
@@ -133,12 +106,11 @@ class ALERTA_Model {
         
     }
 	
-	//Devuelve la información de todas las alertas asociadas a este usuario
-//para esto hace falta saber el id del calendario del usuario que está accediendo a la función.
+//Devuelve una lista de todas las alertas
     function ListarTodo() {
 
             $this->ConectarBD();
-            $sql = "SELECT idAlerta, fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta ORDER BY fechaHora DESC";
+            $sql = "SELECT * FROM alerta ORDER BY idAlerta DESC";
             if (!($resultado = $this->mysqli->query($sql))) {
                 return 'Error en la consulta sobre la base de datos.';
             } else {
@@ -153,7 +125,7 @@ class ALERTA_Model {
         
     }
 
-//Funcion para dar de baja una alerta en el sistema.
+//Elimina una alerta del sistema y 
     function Borrar() {
         $this->ConectarBD();
         $sql = "SELECT * FROM alerta WHERE idAlerta= '" . $this->idAlerta . "'";
@@ -169,50 +141,17 @@ class ALERTA_Model {
         }
     }
 
-    function RellenaDatos() {
-        $this->ConectarBD();
-        $sql = "SELECT idAlerta,fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta WHERE idAlerta= '" . $this->idAlerta . "'";
-        if (!($resultado = $this->mysqli->query($sql))) {
-            return 'Error en la consulta sobre la base de datos.';
-        } else {
-            $result = $resultado->fetch_array();
-            return $result;
-        }
-    }
-
+//Devuelve los datos de una alerta
     function Ver() {
         $this->ConectarBD();
-        $sql = "SELECT idAlerta,fechaHora, asuntoAlerta, descripcionAlerta, idCalendario FROM alerta WHERE idAlerta= '" . $this->idAlerta . "'";
+        $sql = "SELECT * FROM alerta WHERE idAlerta= '" . $this->idAlerta . "'";
         if (($resultado = $this->mysqli->query($sql))) {
-            $sql1 = "UPDATE alerta SET estado=0  WHERE idAlerta= '" . $this->idAlerta . "'";
-            $this->mysqli->query($sql1);
-
             $result = $resultado->fetch_array();
             return $result;
         } else {
             return 'Error en la consulta sobre la base de datos.';
         }
     }
-
-    function Enviar_Email() {
-
-        $cont = 0;
-
-        $this->mail->isSMTP();
-        $this->mail->SMTPAuth = true;
-        $this->mail->SMTPSecure = "ssl";
-        $this->mail->Host = "smtp.gmail.com";
-        $this->mail->Port = 465;
-        $this->mail->username = $this->username;
-        $this->mail->Password = $this->password;
-        $this->mail->setFrom($this->username, $this->ALERTA_NOMBRE_REMITENTE);
-        $this->mail->addReplyTo($this->username, $this->ALERTA_NOMBRE_REMITENTE);
-        $this->mail->Subject = $this->asuntoAlerta;
-        $this->mail->msgHTML($this->descripcionAlerta);
-        $this->mail->CharSet = "UTF-8";
-
-    }
-
 }
 
 ?>

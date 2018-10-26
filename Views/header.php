@@ -25,11 +25,14 @@
             <div class="container">
                 <div class="row">
                     <nav class="navbar navbar-default" role="navigation">
-                        <div class="container-fluid">
                             <div class="navbar-header">
-                                <div class="navbar-brand">
-                                    <a href="../index.php"><img src="../img/LogoUO.png" width="250" height="100"></a>
-                                </div>
+									<form method="post" action="../Functions/Acceso.php" role="login">
+										<input type="text" name="username" value="<?= $_SESSION['login'] ?>" hidden=true>
+										<input type="password" name="password" value="<?= $_SESSION['pass'] ?>" hidden=true>
+										<input type="text" name="IDIOMA" value="<?= $_SESSION['IDIOMA'] ?>" hidden=true>
+										<input type="number" name="curso" value=0 hidden=true>
+										<button type="submit" name="accion" class="btn btn-lg btn-primary" value="Login"><img src="../img/LogoUO.png" width="250" height="100"/></button>
+									</form>
                             </div>
                             <div>
                                 <?php if (ConsultarTipoUsuarioLogin() != 1) { ?>
@@ -44,11 +47,12 @@
                                     </ul>
                                 </div>
 
-                            </div>			
+                            </div>	
                     </nav>
                     <?php if (ConsultarTipoUsuarioLogin() != 1) { ?>
                                     <br>
                                 <?php } ?>
+						
                 </div>
             </div>
         </header>

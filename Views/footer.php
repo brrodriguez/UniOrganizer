@@ -13,7 +13,7 @@
 					<div class="widget">
 						<h5 class="widgetheading">Contacto</h5>
 						<ul class="link-list">
-                                                    <li><a target="_blank" href="https://www.google.es/maps/place/ESEI+-+Escola+Superior+de+Enxe%C3%B1er%C3%ADa+Inform%C3%A1tica/@42.3449233,-7.8554787,15z/data=!4m2!3m1!1s0x0:0xbb2380c0a6827554?sa=X&ved=0ahUKEwiKoO6ZjtLXAhUGXBQKHfQGBFYQ_BIIjQEwCw"><img src="../img/gps.png" width="20px" height="20px"></a></li>
+                                                    <li><a target="_blank" href="https://www.google.es/maps/place/Campus+Ourense/@42.3449233,-7.8554787,15z/data=!4m5!3m4!1s0x0:0xbf4fd0b3ac19bfea!8m2!3d42.3439349!4d-7.8573355"><img src="../img/gps.png" width="20px" height="20px"></a></li>
 							<li><a href="#">987353839</a></li>
 							<li><a href="#">uniorganizer@gmail.com</a></li>
 						</ul>

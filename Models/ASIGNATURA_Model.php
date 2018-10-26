@@ -4,16 +4,16 @@ include_once '../Functions/LibraryFunctions.php';
 
 class ASIGNATURA_Model {
 
+//Parámetros de la clase Asignatura
 	var $idAsignatura;
     var $nombreAsignatura;
-    var $descripcionAsignatura;
 
-    function __construct($idAsignatura, $nombreAsignatura, $descripcionAsignatura) {
+    function __construct($idAsignatura, $nombreAsignatura) {
         $this->idAsignatura = $idAsignatura;
 		$this->nombreAsignatura = $nombreAsignatura;
-        $this->descripcionAsignatura = $descripcionAsignatura;
     }
 
+//Función para conectarnos a la Base de datos
     function ConectarBD() {
         $this->mysqli = new mysqli("localhost", "root", "", "uniorganizer");
 
@@ -22,6 +22,7 @@ class ASIGNATURA_Model {
         }
     }
 
+//Devuelve una lista de todas las asignaturas
     function Listar() {
         $this->ConectarBD();
         $sql = "SELECT * FROM asignatura";
@@ -38,6 +39,7 @@ class ASIGNATURA_Model {
         }
     }
 
+//Elimina una asignatura del sistema
     function Borrar($id) {
         $this->ConectarBD();
         $sql = "DELETE FROM asignatura WHERE idAsignatura='" . $id . "'";
@@ -48,36 +50,28 @@ class ASIGNATURA_Model {
         }
     }
 
+//Inserta una nueva asignatura en el sistema
     function Insertar() {
         $this->ConectarBD();
-        $sql = "INSERT INTO `asignatura`(`nombreAsignatura`, `descripcionAsignatura`) VALUES ('" . $this->nombreAsignatura . "','" . $this->descripcionAsignatura . "')";
+        $sql = "INSERT INTO `asignatura`(`nombreAsignatura`) VALUES ('" . $this->nombreAsignatura . "')";
         if (!($resultado = $this->mysqli->query($sql))) {
             return 'Error en la consulta sobre la base de datos.';
         } else {
             return true;
         }
     }
-
-    function VerDetalle($id) {
+	
+//Devuelve los datos de una asignatura
+    function Ver($id) {
         $this->ConectarBD();
         $sql = "SELECT * FROM asignatura WHERE idAsignatura='" . $id . "'";
-        if (!($resultado = $this->mysqli->query($sql))) {
-            return 'Error en la consulta sobre la base de datos.';
+        if (($resultado = $this->mysqli->query($sql))) {
+            $result = $resultado->fetch_array();
+            return $result;
         } else {
-            return $resultado->fetch_array();
+            return 'Error en la consulta sobre la base de datos.';
         }
     }
-
-    function Modificar($id) {
-        $this->ConectarBD();
-        $sql = "UPDATE asignatura SET nombreAsignatura='" . $this->nombreAsignatura . "',descripcionAsignatura='" . $this->descripcionAsignatura . "' WHERE idAsignatura='" . $id . "'";
-        if (!($resultado = $this->mysqli->query($sql))) {
-            return 'Error en la consulta sobre la base de datos.';
-        } else {
-            return true;
-        }
-    }
-
 }
 
 ?>

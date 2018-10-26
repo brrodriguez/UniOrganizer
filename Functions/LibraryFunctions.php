@@ -87,26 +87,6 @@ function AñadirFunciones($array) {
     return $array;
 }
 
-//Genera un link para la página a partir de un nombre
-function GenerarLinkPagina($PAGINA_NOM) {
-    $link = str_replace(" ", "_", $PAGINA_NOM);
-    $s = '../Views/';
-    $s .= $link;
-    $s .= '_Vista.php';
-    return $s;
-}
-
-/*
-  //Genera el link de un controlador a partir del nombre de la funcionalidad
-  function GenerarLinkControlador($CON_NOM) {
-  $link = str_replace(" ", "_", $CON_NOM);
-  $s = '../Controllers/';
-  $s .= $link;
-  $s .= '_Controller.php';
-  return $s;
-  }
- */
-
 //Devuelve el nombre de una funcionalidad a partir de su id
 function ConsultarNombreFuncionalidad($idFuncionalidad) {
     $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
@@ -129,7 +109,7 @@ function ConsultarIDRol($nombreRol) {
     return $result['idRol'];
 }
  
-
+//Devuelve el ID de un curso a partir de su nombre
 function ConsultarIDCurso($nombreCurso) {
     $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
     if ($mysqli->connect_errno) {
@@ -162,59 +142,8 @@ function ConsultarTipoUsuarioLogin() {
     $result = $mysqli->query($sql)->fetch_array();
     return $result['tipoUsuario'];
 }
- 
-//Devuelve el nombre de rol a partir del id de rol
-function ConsultarNOMRol($idRol) {
-    $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
-    if ($mysqli->connect_errno) {
-        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-    }
-    $sql = "SELECT nombreRol FROM ROL WHERE idRol='" . $idRol . "'";
-    $result = $mysqli->query($sql)->fetch_array();
-    return $result['nombreRol'];
-}
 
-function ConsultarNombreCurso($idCurso) {
-    $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
-    if ($mysqli->connect_errno) {
-        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-    }
-    $sql = "SELECT nombreCurso FROM Curso WHERE idCurso='" . $idCurso . "'";
-    $result = $mysqli->query($sql)->fetch_array();
-    return $result['nombreCurso'];
-}
- 
-function ConsultarNombreActividadGrupal($idActividadGrupal) {
-    $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
-    if ($mysqli->connect_errno) {
-        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-    }
-    $sql = "SELECT nombreActividadGrupal FROM ACTIVIDADGRUPAL WHERE idActividadGrupal='" . $idActividadGrupal . "'";
-    $result = $mysqli->query($sql)->fetch_array();
-    return $result['nombreActividadGrupal'];
-}
- 
-function ConsultarNombreActividadIndividual($idActividadGrupal) {
-    $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
-    if ($mysqli->connect_errno) {
-        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-    }
-    $sql = "SELECT nombreActividadIndividual FROM ACTIVIDADINDIVIDUAL WHERE idActividadIndividual='" . $idActividadGrupal . "'";
-    $result = $mysqli->query($sql)->fetch_array();
-    return $result['nombreActividadIndividual'];
-}
-
-function ConsultarEmailUsuario($username) {
-    $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
-    if ($mysqli->connect_errno) {
-        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-    }
-    $sql = "SELECT email FROM Usuario WHERE username='" . $username . "'";
-    $result = $mysqli->query($sql)->fetch_array();
-    return $result['email'];
-}
-
-//añade a la pagina default los enlaces correspondientes a las funcionalidades
+//Añade a la pagina default los enlaces correspondientes a las funcionalidades
 function añadirFuncionalidades($NOM) {
     include '../Locates/Strings_' . $NOM['IDIOMA'] . '.php';
     $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
@@ -223,7 +152,6 @@ function añadirFuncionalidades($NOM) {
     }
     $rol = "SELECT tipoUsuario FROM USUARIO  WHERE username='" . $NOM['login'] . "'";
     $sql = "SELECT DISTINCT categoriaFuncionalidad FROM FUNCIONALIDAD, FUNCIONALIDAD_ROL WHERE FUNCIONALIDAD_ROL.idFuncionalidad = FUNCIONALIDAD.idFuncionalidad AND FUNCIONALIDAD_ROL.idRol=(" . $rol . ")";
-//$sql = "SELECT idFuncionalidad FROM Funcionalidad_Rol WHERE idRol=(" . $rol . ")";
     if (!($resultado = $mysqli->query($sql))) {
         echo 'Error en la consulta sobre la base de datos';
     } else {
@@ -233,7 +161,9 @@ function añadirFuncionalidades($NOM) {
             switch ($funcionalidad) {
 
                 case "Gestion Usuarios":
+					if(ConsultarTipoUsuarioLogin()==1){
                         ?><li><a style="font-size:15px;" href="../Controllers/USUARIO_Controller.php"><?php echo $strings['Gestión de Usuarios']; ?></a></li> <?php
+					}
                     break;
 
                 case "Gestion Cursos":
@@ -287,8 +217,6 @@ function showNavbar() {
         echo '<br><br><li role="presentation" class="active"><a href="../Functions/Conectar.php" class="m1">Iniciar Sesion</a></li>';
 		
 		echo '<br><br><li role="presentation" class="active"><a href="../Functions/Registrar.php" class="m1">Registrar</a></li>';
-//        echo '<li role="presentation"><a href="" class="m1">Sobre Nosotros</a></li>';
-//        echo '<li role="presentation"><a href="" class="m1">Contacto</a></li>';
     } else {
         include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php';
         añadirFuncionalidades($_SESSION);
@@ -299,7 +227,6 @@ function showNavbar() {
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" href="../Controllers/USUARIO_Controller.php?username=<?php echo $_SESSION['login']; ?>&accion=<?php echo $strings['Ver']; ?>"><?php echo $strings['Mi Perfil'] ?></a><br>
-                    <a class="dropdown-item" href="../Controllers/USUARIO_Controller.php?username=<?php echo $_SESSION['login']; ?>&accion=<?php echo $strings['MisCursos']; ?>"><?php echo $strings['MisCursos'] ?></a><br>
                 <a class="dropdown-item" href="../Functions/Desconectar.php"><?php echo $strings['Cerrar Sesión'] ?></a> <br>
             </div>
         </li> 
@@ -307,6 +234,7 @@ function showNavbar() {
     }
 }
 
+//Devuelve una lista de todos los usuarios
 function ListarUsuarios() {
 
     $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
@@ -322,8 +250,23 @@ function ListarUsuarios() {
     return $toret;
 }
 
+//Devuelve un curso a partir de su id
+function obtenerCursos($idCalendario) {
 
-//Devuelve el id del calendario del usuario
+    $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
+    if ($mysqli->connect_errno) {
+        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    }
+    $sql = "SELECT * FROM curso WHERE idCalendario= '" . $idCalendario . "'";
+    if (!($resultado = $mysqli->query($sql))) {
+        echo 'Error en la consulta sobre la base de datos';
+    } else {
+        $toret = $resultado->fetch_all();
+    }
+    return $toret['nombreCurso'];
+}
+
+//Devuelve el número de calendarios mas uno
 function ObtenerNumCalendarios() {
     $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
     if ($mysqli->connect_errno) {
@@ -335,7 +278,7 @@ function ObtenerNumCalendarios() {
     return $result['max'];
 }
 
-//Devuelve el número de calendarios mas uno
+//Devuelve el id del calendario del usuario
 function ObtenerCalendario($username) {
     $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
     if ($mysqli->connect_errno) {
@@ -348,6 +291,212 @@ function ObtenerCalendario($username) {
 	$toret = $result->fetch_array();
     return $toret['idCalendario'];
 }
+
+//Devuelve el ID del último curso insertado
+function obtenerUltimoCurso() {
+    $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
+    if ($mysqli->connect_errno) {
+        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    }
+    $sql = "SELECT MAX(idCurso) AS id FROM curso";
+    if (!($resultado = $mysqli->query($sql))) {
+        return 'Error en la consulta sobre la base de datos.';
+    } else {
+        $toret = $resultado->fetch_array();
+		return $toret['id'];
+    }
+}
+
+//Devuelve el ID de un curso a partir de su nombre
+function obtenerIdCurso($curso) {
+    $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
+    if ($mysqli->connect_errno) {
+        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    }
+
+    $sql = "SELECT idCurso AS id FROM curso WHERE nombreCurso='" . $curso . "'";
+    if (!($resultado = $mysqli->query($sql))) {
+        return 'Error en la consulta sobre la base de datos.';
+    } else {
+        $toret = $resultado->fetch_array();
+        $idCurso = $toret['id'];
+		return $idCurso;
+    }
+}
+
+//Devuelve el ID de una asignatura a partir de su nombre
+function obtenerIdAsignatura($asignatura) {
+    $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
+    if ($mysqli->connect_errno) {
+        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    }
+
+    $sql = "SELECT idAsignatura AS id FROM asignatura WHERE nombreAsignatura='" . $asignatura . "'";
+    if (!($resultado = $mysqli->query($sql))) {
+        return 'Error en la consulta sobre la base de datos.';
+    } else {
+        $toret = $resultado->fetch_array();
+        $idAsignatura = $toret['id'];
+		return $idAsignatura;
+    }
+}
+
+include("../Librerías/simplehtmldom/simple_html_dom.php");
+//Funcion para extraer de la web de la universidad, mediante web scraping, todas las asignaturas del grado
+function extraerAsignaturas(){
+    // Creamos un objeto DOM directamente desde una URL
+	$html = file_get_html('http://historia.uvigo.es/es/docencia/guias-docentes');
+	$i=0;
+	// buscamos todos los elementos <a> y nos quedamos con los que nos interesan
+	foreach($html->find('a') as $element){
+		if (strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura') !== false) {
+			$array[$i] = $element->innertext;
+			$i++;
+		}	
+	}	
+	return $array;	
+}
+
+//Funcion para extraer de la web de la universidad, mediante web scraping, los distintos cursos y sus asignaturas correspondientes
+function extraerCursos($curso){	
+	$i=0;
+	
+	if($curso==1){
+		// Creamos un objeto DOM directamente desde una URL
+		$html = file_get_html('http://historia.uvigo.es/es/docencia/guias-docentes#gxh1c');
+		// buscamos todos los elementos <a> y nos quedamos con los que nos interesan
+		foreach($html->find('table[class=table table-bordered table-condensed]') as $element){
+			foreach($element->find('a') as $element){
+				if (strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V011') !== false or strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V012') !== false) {
+					$array[$i] = $element->innertext;
+					$i++;
+				}
+			}
+		}
+	}else{
+		if($curso==2){
+			// Creamos un objeto DOM directamente desde una URL
+			$html = file_get_html('http://historia.uvigo.es/es/docencia/guias-docentes#gxh2c');
+			// buscamos todos los elementos <a> y nos quedamos con los que nos interesan
+			foreach($html->find('table[class=table table-bordered table-condensed]') as $element){
+				foreach($element->find('a') as $element){
+					if (strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V013') !== false or strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V014') !== false) {
+						$array[$i] = $element->innertext;
+						$i++;
+					}
+				}
+			}
+		}else{
+			if($curso==3){
+				// Creamos un objeto DOM directamente desde una URL
+				$html = file_get_html('http://historia.uvigo.es/es/docencia/guias-docentes#gxh3c');
+				// buscamos todos los elementos <a> y nos quedamos con los que nos interesan
+				foreach($html->find('table[class=table table-bordered table-condensed]') as $element){
+					foreach($element->find('a') as $element){
+						if (strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V015') !== false or strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V016') !== false) {
+							$array[$i] = $element->innertext;
+							$i++;
+						}
+					}
+				}
+			}else{
+				if($curso==4){
+					// Creamos un objeto DOM directamente desde una URL
+					$html = file_get_html('http://historia.uvigo.es/es/docencia/guias-docentes#gxh4c');
+					// buscamos todos los elementos <a> y nos quedamos con los que nos interesan
+					foreach($html->find('table[class=table table-bordered table-condensed]') as $element){
+						foreach($element->find('a') as $element){
+							if (strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V019') !== false ) {
+								$array[$i] = $element->innertext;
+								$i++;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return $array;
+}
+
+//Funcion para extraer de la web de la universidad, mediante web scraping, todos los exámenes de las asignaturas de primero
+function extraerExamenesPrimero(){
+    // Creamos un objeto DOM directamente desde una URL
+	$html = file_get_html('http://historia.uvigo.es/es/docencia/examenes');
+	$i=1;
+	$asig = 1;
+	// buscamos los elementos <div> con un id concreto y nos quedamos con los <td> de su interior
+	foreach($html->find('div[id=gxh18191c]') as $element){
+					foreach($element->find('td') as $element){
+						$primero[$asig][$i] = $element->innertext;
+						$i++;
+						if($i==5){
+							$i=1;
+							$asig++;
+						}					
+					}
+
+	}
+	return $primero;
+}
+
+//Funcion para extraer de la web de la universidad, mediante web scraping, todos los exámenes de las asignaturas de segundo
+function extraerExamenesSegundo(){
+    // Creamos un objeto DOM directamente desde una URL
+	$html = file_get_html('http://historia.uvigo.es/es/docencia/examenes');
+	$i=1;
+	$asig = 1;
+	// buscamos los elementos <div> con un id concreto y nos quedamos con los <td> de su interior
+	foreach($html->find('div[id=gxh18192c]') as $element){
+					foreach($element->find('td') as $element){
+						$segundo[$asig][$i] = $element->innertext;
+						$i++;
+						if($i==5){
+							$i=1;
+							$asig++;
+						}					
+					}
+	}
+	return $segundo;
+}
+
+//Funcion para extraer de la web de la universidad, mediante web scraping, todos los exámenes de las asignaturas de tercero
+function extraerExamenesTercero(){
+    // Creamos un objeto DOM directamente desde una URL
+	$html = file_get_html('http://historia.uvigo.es/es/docencia/examenes');
+	$i=1;
+	$asig = 1;
+	// buscamos los elementos <div> con un id concreto y nos quedamos con los <td> de su interior
+	foreach($html->find('div[id=gxh18193c]') as $element){
+					foreach($element->find('td') as $element){
+						$tercero[$asig][$i] = $element->innertext;
+						$i++;
+						if($i==5){
+							$i=1;
+							$asig++;
+						}					
+					}	
+	}
+	return $tercero;
+}
+
+//Funcion para extraer de la web de la universidad, mediante web scraping, todos los exámenes de las asignaturas de cuarto
+function extraerExamenesCuarto(){
+    // Creamos un objeto DOM directamente desde una URL
+	$html = file_get_html('http://historia.uvigo.es/es/docencia/examenes');
+	$i=1;
+	$asig = 1;
+	// buscamos los elementos <div> con un id concreto y nos quedamos con los <td> de su interior
+	foreach($html->find('div[id=gxh18194c]') as $element){
+					foreach($element->find('td') as $element){
+						$cuarto[$asig][$i] = $element->innertext;
+						$i++;
+						if($i==5){
+							$i=1;
+							$asig++;
+						}					
+					}	
+	}
+	return $cuarto;
+}
 ?>
-
-
