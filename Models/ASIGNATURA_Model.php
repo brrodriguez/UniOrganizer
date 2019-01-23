@@ -38,6 +38,23 @@ class ASIGNATURA_Model {
             return $toret;
         }
     }
+	
+//Devuelve una lista de las asignaturas del usuario
+    function ListarAsignaturasUsuario() {
+        $this->ConectarBD();
+        $sql = "SELECT * FROM asignatura A, asignatura_curso B, curso C WHERE A.idAsignatura=B.idAsignatura AND B.idCurso=C.idCurso AND C.idCalendario='" . $_SESSION['calendario'] . "'";
+        if (!($resultado = $this->mysqli->query($sql))) {
+            return 'Error en la consulta sobre la base de datos.';
+        } else {
+            $toret = array();
+            $i = 0;
+            while ($fila = $resultado->fetch_array()) {
+                $toret[$i] = $fila;
+                $i++;
+            }
+            return $toret;
+        }
+    }
 
 //Elimina una asignatura del sistema
     function Borrar($id) {

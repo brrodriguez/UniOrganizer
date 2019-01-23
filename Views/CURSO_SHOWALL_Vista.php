@@ -22,18 +22,29 @@ class CURSO_SHOWALL
         include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php';
 		?>
 		<div class="container">
-                <br>
-		
+            
+			<?php
+			if(ConsultarTipoUsuarioLogin()==2)
+			{?>
+			<a href="?accion=vistainsertar"><button type="button" class="btn btn-primary btn-lg btn-block"><?php echo $strings['newcurso'];?></button></a>
+			<br>
 			<a href="?accion=vistaimportar"><button type="button" class="btn btn-primary btn-lg btn-block"><?php echo $strings['obtenerCurso'];?></button></a>
 			<br>
-			<a href="?accion=vistainsertar"><button type="button" class="btn btn-primary btn-lg btn-block"><?php echo $strings['newcurso'];?></button></a>
+			<?php
+			}
+			if(ConsultarTipoUsuarioLogin()==1)
+			{?>
+			<a href="?accion=vistafiltrar"><button type="button" class="btn btn-primary btn-lg btn-block"><?php echo $strings['filtrar'];?></button></a>
+			<br>
+			<?php
+			}?>
 			
 			<table class="table">
 				<thead class="thead-dark">
 					<tr>
 					  <th scope="col"><?php echo $strings['nombreCurso2'];?></th>
 					  <th scope="col"><?php echo $strings['descripcionCurso2'];?></th>
-					  <th scope="col"><?php echo $strings['idCalendario'];?></th>
+					  <th scope="col"><?php echo $strings['username'];?></th>
 					  <th scope="col"></th>
 					  <th scope="col"></th>
 					  <th scope="col"></th>
@@ -42,11 +53,13 @@ class CURSO_SHOWALL
 				<tbody>
 		<?php
 		foreach($this->datos as $valor)
-		{?>
+		{
+			$usuario = ObtenerUsername($valor['3']);
+			?>
 					<tr>
 						<th><a href="?accion=ver&id=<?php echo $valor['0'];?>"><?php echo $valor['1'];?></a></th>
 						<td><?php echo $valor['2'];?></td>
-						<td><?php echo $valor['3'];?></td>
+						<td><?php echo $usuario;?></td>
 
 						<td><a href="?accion=vistaasignar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-success"><?php echo $strings['AsignarAsignaturas'];?></button></a></td>
 						<td><a href="?accion=vistamodificar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-primary"><?php echo $strings['cursomodificar'];?></button></a></td>

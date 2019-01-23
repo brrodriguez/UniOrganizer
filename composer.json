@@ -1,0 +1,6 @@
+{
+    "require": {
+        "sabre/vobject": "~4.1",
+        "om/icalparser": "^0.2.3"
+    }
+}

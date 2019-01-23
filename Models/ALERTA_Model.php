@@ -57,7 +57,7 @@ class ALERTA_Model {
 			
 			$idCalendario = ObtenerCalendario($_SESSION['login']);
 			
-			$sql = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "', NULL, '" . $idCurso . "','" . $idHora . "','" . $idInsertada . "')";
+			$sql = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, asuntoEntrega, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "', NULL, '" . $idCurso . "', NULL,'" . $idHora . "','" . $idInsertada . "')";
             if (!($resultado = $this->mysqli->query($sql))) {
 				$sql = "DELETE FROM alerta WHERE idAlerta='" . $idInsertada . "'";
 				$this->mysqli->query($sql);

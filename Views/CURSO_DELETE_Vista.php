@@ -30,7 +30,7 @@ class CURSO_DELETE {
 
                 <div class="form-group">
                     <label class="control-label" ><?php echo $strings['descripcionCurso']; ?></label><br>
-                    <textarea rows="20" cols="70" id="descripcionCurso" name="descripcionCurso" readonly="true"><?php echo $this->valores['descripcionCurso'];?></textarea>
+                    <textarea rows="8" cols="70" id="descripcionCurso" name="descripcionCurso" readonly="true"><?php echo $this->valores['descripcionCurso'];?></textarea>
                 </div>
 
                 <br>

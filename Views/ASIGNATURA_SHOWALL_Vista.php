@@ -7,7 +7,7 @@ class ASIGNATURA_SHOWALL{
 	private $tipoUsuario;
 
     function __construct($array, $tipoUsuario, $volver) {
-        $this->datos = $array;
+		$this->datos = $array;
 		$this->tipoUsuario = $tipoUsuario;
         $this->volver = $volver;
         $this->render();
@@ -33,7 +33,8 @@ class ASIGNATURA_SHOWALL{
 		foreach($this->datos as $valor)
 		{?>
 					<tr>
-						<th><br><?php echo $valor['1']; ?></th><?php
+						<th><br><?php echo $valor['1']; ?></th>
+						<td><a href="https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/index.php<?php echo $valor['href'];?>"><button type="button" class="btn btn-success"><?php echo $strings['Guia'];?></button></a></td><?php
 						if($this->tipoUsuario==1){
 							?><td><a href="?accion=vistaeliminar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-danger"><?php echo $strings['asignaturaeliminar'];?></button></a></td><?php
 						}?>

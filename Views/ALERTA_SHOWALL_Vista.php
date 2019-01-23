@@ -21,8 +21,13 @@ class ALERTA_Listar {
             <div class="container">
 				<br>
                 <div align='left'>
-					<a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><button type="button" class="btn btn-primary btn-lg btn-block"><?php echo $strings['Crear'] ?></button></a>				
-         
+					<?php
+					if(ConsultarTipoUsuarioLogin()==2){
+					?>
+						<a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><button type="button" class="btn btn-primary btn-lg btn-block"><?php echo $strings['Crear'] ?></button></a>				
+					<?php
+					}
+					?>
                     <table class="table">
                         <thead class="thead-dark">
                             <tr>

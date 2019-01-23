@@ -33,6 +33,7 @@ $strings = array(
  'Mi Perfil' => 'Mi Perfil',
  'Gestión de Usuarios' => 'Usuarios',
  'Gestión de Alertas' => 'Alertas',
+ 'Gestión de Eventos' => 'Eventos',
  'Gestión de Calendarios' => 'Calendarios',
  'Gestión de Asignaturas' => 'Asignaturas',
  'Gestión de Cursos' => 'Cursos',
@@ -40,6 +41,7 @@ $strings = array(
 //Acciones
  'Volver' => 'Volver',
  'Insertar' => 'Insertar',
+ 'Añadir' => 'Añadir',
  'Modificar' => 'Modificar',
  'Consultar' => 'Consultar',
  'Borrar' => 'Borrar',
@@ -80,17 +82,18 @@ $strings = array(
  'asuntoAlerta' => 'Asunto',
  'Descripción' => 'Descripción',
  'descripcionAlerta' => 'Descripción',
- 'Ver Alerta' => 'Ver Alerta',
- 'Insertar Alerta' => 'Crear Alerta',
- 'Borrar Alerta' => 'Borrar Alerta',
- 'La alerta fue borrada con éxito.' => 'La alerta fue borrada con éxito',
+ 'Ver Alerta' => 'Ver Evento',
+ 'Insertar Alerta' => 'Crear Evento',
+ 'Añadir Alerta' => 'Crear Alerta',
+ 'Borrar Alerta' => 'Borrar Evento',
+ 'La alerta fue borrada con éxito.' => 'El evento fue borrado con éxito',
  'No se ha podido conectar con la base de datos en INSERT calendario_horas.' => 'No se pudo crear la Alerta porque no existe ese día en el calendario.',
  'Asunto' => 'Asunto',
  'Fecha' => 'Fecha',
  'Hora' => 'Hora',
  'Dias' => 'Dias',
  'Mensaje' => 'Mensaje',
- 'Crear' =>'Nueva Alerta',
+ 'Crear' =>'Nuevo Evento',
  'Aviso' =>'Introduce cuantos días antes quieres que el sistema te recuerde este evento.',
 
  
@@ -127,6 +130,7 @@ $strings = array(
  'asignaturamodificar' => 'Modificar',
  'asignaturaeliminar' => 'Eliminar',
  'Eliminar Asignatura' => 'Eliminar Asignatura',
+  'Guia' => 'Guía Docente',
  
 //Cursos
  'nombreCurso2' => 'Nombre del Curso',
@@ -152,8 +156,9 @@ $strings = array(
  'AñadirAsignatura' => 'Añadir Asignatura',
  'AsignarAsignaturas' => 'Asignar Asignaturas',
  'Asignatura'=>'Asignatura',
- 'Guardar'=>'Guardar'
-
+ 'Guardar'=>'Guardar',
+ 'filtrar'=>'Filtrar',
+ 'Filtrar Cursos'=>'Filtrar Cursos'
     
     
 );

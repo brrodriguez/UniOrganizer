@@ -19,6 +19,24 @@
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script type="text/javascript">
+		function openDialog() {
+			$('#overlay').fadeIn('fast', function() {
+				$('#popup').css('display','block');
+				$('#popup').animate({'left':'30%'},500);
+			});
+		}
+		 
+		function closeDialog(id) {
+			$('#'+id).css('position','absolute');
+			$('#'+id).animate({'left':'-100%'}, 500, function() {
+				$('#'+id).css('position','fixed');
+				$('#'+id).css('left','100%');
+				$('#overlay').fadeOut('fast');
+			});
+		}
+		</script>
     </head>
     <body>
         <header>
@@ -39,12 +57,36 @@
                                     <br>
                                 <?php } ?>
                                 <div class="menu">
-                                    <ul class="nav nav-tabs" role="tablist">
+								<?php
+									$array_date = getDate();
+									$date = $array_date['year']."-".$array_date['mon']."-".$array_date['mday'];
+									$fecha1 = date('Y-m-d', strtotime( '+1 day' , strtotime($date) ));
+									$fecha2 = date('Y-m-d', strtotime( '+2 day' , strtotime($date) ));
+									$num = numEventosAlertas($fecha1, $fecha2);
+									
+                                ?> 	<ul class="nav nav-tabs" role="tablist">
 
                                         <?php
                                         showNavbar();
                                         ?>
                                     </ul>
+								<?php 
+									if($num > 0){
+										if($num > 1){?>
+									<div style="background-color:grey; border-radius: 5px 5px 5px 5px;">
+										<b>
+											<FONT FACE="arial" SIZE=4 COLOR="red"><?php echo 'Tienes '. $num .' eventos en los próximos 2 días.'?></FONT>
+										</b>
+									</div>	
+								<?php 	
+										}else{?>
+									<div style="background-color:grey; border-radius: 5px 5px 5px 5px;">
+										<b>
+											<FONT FACE="arial" SIZE=4 COLOR="red"><?php echo 'Tienes '. $num .' evento en los próximos 2 días.'?></FONT>
+										</b>
+									</div>
+								<?php	}
+									} ?>
                                 </div>
 
                             </div>	

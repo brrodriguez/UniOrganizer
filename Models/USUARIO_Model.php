@@ -388,7 +388,7 @@ class USUARIO_Modelo {
     }
 	
 //Devuelve los eventos de un dia especificado
-	function get_day($calendarioHoras,$horas,$asignaturas,$cursos,$alertas,$wd,$semana){
+function get_day($calendarioHoras,$horas,$asignaturas,$cursos,$alertas,$wd,$semana){
 		$i = -1;
 		$array =  array();
 		foreach($horas as $hora => $values){
@@ -406,6 +406,8 @@ class USUARIO_Modelo {
 								if($asignatura["idAsignatura"]==$horaCalendario["idAsignatura"]) {
 									$array[$i]["nombreAsignatura"] = $asignatura["nombreAsignatura"] ;
 									$array[$i]["idAsignatura"] = $asignatura["idAsignatura"] ;
+									$array[$i]["asuntoEntrega"] = $horaCalendario["asuntoEntrega"] ;
+									$array[$i]["idCalendarioHoras"] = $horaCalendario["idCalendarioHoras"];
 									$array[$i]["asuntoAlerta"] = NULL;
 									$array[$i]["idAlerta"] = NULL;
 								} 
@@ -427,6 +429,8 @@ class USUARIO_Modelo {
 										$array[$i]["idAsignatura"] = NULL;
 										$array[$i]["nombreCurso"] = NULL;
 										$array[$i]["idCurso"] = NULL;
+										$array[$i]["asuntoEntrega"] = NULL;
+										$array[$i]["idCalendarioHoras"] = $horaCalendario["idCalendarioHoras"];
 										$array[$i]["asuntoAlerta"]=$alerta["asuntoAlerta"];
 										$array[$i]["idAlerta"]=$alerta["idAlerta"];
 									}

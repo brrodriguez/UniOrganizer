@@ -89,16 +89,60 @@ class CURSO_Model {
 		
     }
 	
+//Permite filtrar por nombre de usuario
+	function filtrar($username) {
+        $this->ConectarBD();
+
+        if ($username == '') { //0
+            $sql = "SELECT * FROM curso ";
+        } else if ($username != '') { //1
+			$id = ObtenerCalendario($username);
+            $sql = "SELECT * FROM curso WHERE idCalendario = '" . $id . "'";
+        }
+
+        if (!$resultado = $this->mysqli->query($sql)) {
+            return 'No se ha podido conectar con la base de datos';
+        } else {
+            $toret = array();
+            $i = 0;
+            while ($fila = $resultado->fetch_array()) {
+                $toret[$i] = $fila;
+                $i++;
+            }
+            return $toret;
+        }
+    }
+	
 //Crea los eventos para los exámenes de las asignaturas de un curso
-	function crearExamenes($idCurso, $idAsignatura, $datos1, $datos2, $datos3) {
+	function crearEntregas($idCurso, $idAsignatura, $entrega, $datos) {
         $this->ConectarBD();
 		
 		$idCalendario = ObtenerCalendario($_SESSION['login']);
+		$añoA = substr($datos, 0, 4);
+		$mesA = substr($datos, 5, 2);
+		$diaA = substr($datos, 8, 2);
+		$fechaA = $añoA . '/' . $mesA . '/' . $diaA;
+		$horasA = (int) substr($datos, 11, 2);
 		
-		$fechaA = preg_split('/\//', $datos1[0]);
-		$fechaOk = $fechaA[1] . '/' . $fechaA[0] . '/' . $fechaA[2];
-		$fecha1 = date('Y-m-d', strtotime($fechaOk));
-		$horaA = $datos1[2];
+		if($mesA==11 or $mesA==12 or $mesA==1 or $mesA==2 or $mesA==3){
+			$horasA = $horasA+1;
+		}else{
+			$horasA = $horasA+2;
+		}
+		
+		$minsA = (int) substr($datos, 14, 2);
+		
+		if($minsA <= 30){
+			$minsA = '00';
+		}else{
+			$minsA = '00';
+			$horasA++;
+		}
+		
+		$horaA = $horasA . ':' . $minsA . ':00';
+		$horaA = date('H:i:s', strtotime($horaA));
+		$fecha1 = date('Y-m-d', strtotime($fechaA));
+		
 		$sql1 = "SELECT idHoraPosible AS id FROM horas_posibles WHERE dia='" . $fecha1 . "' AND horaInicio='" . $horaA . "'";
 		if (!($resultado = $this->mysqli->query($sql1))) {
 			return 'No se ha podido conectar con la base de datos en SELECT idHoraPosible.';
@@ -111,74 +155,17 @@ class CURSO_Model {
 			$result = $resultado->fetch_array();
 			$idHora = $result['id'];
 			if(!($idHora)){
-				$sql2 = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "','" . $idAsignatura . "', '" . $idCurso . "','" . $idHoraPosibleA . "', NULL )";
+				$sql2 = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, asuntoEntrega, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "', '" . $idAsignatura . "', '" . $idCurso . "', '" . $entrega . "', '" . $idHoraPosibleA . "', NULL )";
 				if (!($resultado = $this->mysqli->query($sql2))) {
 					return 'Error en la inserción de calendario.';
 				} 
 			}
 		}else{
-			$sql2 = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "','" . $idAsignatura . "', '" . $idCurso . "','" . $idHoraPosibleA . "', NULL )";
+			$sql2 = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, asuntoEntrega, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "', '" . $idAsignatura . "', '" . $idCurso . "', '" . $entrega . "', '" . $idHoraPosibleA . "', NULL )";
 			if (!($resultado = $this->mysqli->query($sql2))) {
 				return 'Error en la inserción de calendario.';
 			} 
-		}
-		
-		$fechaB = preg_split('/\//', $datos2[0]);
-		$fechaOk = $fechaB[1] . '/' . $fechaB[0] . '/' . $fechaB[2];
-		$fecha2 = date('Y-m-d', strtotime($fechaOk));;
-		$horaB = $datos2[2];
-		$sql3 = "SELECT idHoraPosible AS id FROM horas_posibles WHERE dia='" . $fecha2 . "' AND horaInicio='" . $horaB . "'";
-		if (!($resultado = $this->mysqli->query($sql3))) {
-			return 'No se ha podido conectar con la base de datos en SELECT idHoraPosible.';
-		} else {
-			$result = $resultado->fetch_array();
-			$idHoraPosibleB = $result['id'];
-		}
-		$sql = "SELECT idCalendarioHoras AS id FROM calendario_horas WHERE idCalendario='" . $idCalendario . "' AND idAsignatura='" . $idAsignatura . "' AND idHoraPosible='" . $idHoraPosibleB . "'";
-		if ($resultado = $this->mysqli->query($sql)) {
-			$result = $resultado->fetch_array();
-			$idHora = $result['id'];
-			if(!($idHora)){
-				$sql4 = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "','" . $idAsignatura . "', '" . $idCurso . "','" . $idHoraPosibleB . "', NULL )";
-				if (!($resultado = $this->mysqli->query($sql4))) {
-					return 'Error en la inserción de calendario.';
-				} 
-			}
-		}else{
-			$sql4 = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "','" . $idAsignatura . "', '" . $idCurso . "','" . $idHoraPosibleB . "', NULL )";
-			if (!($resultado = $this->mysqli->query($sql4))) {
-				return 'Error en la inserción de calendario.';
-			} 
-		}
-		
-		$fechaC = preg_split('/\//', $datos3[0]);
-		$fechaOk = $fechaC[1] . '/' . $fechaC[0] . '/' . $fechaC[2];
-		$fecha3 = date('Y-m-d', strtotime($fechaOk));
-		$horaC = $datos3[2];
-		$sql5 = "SELECT idHoraPosible AS id FROM horas_posibles WHERE dia='" . $fecha3 . "' AND horaInicio='" . $horaC . "'";
-		if (!($resultado = $this->mysqli->query($sql5))) {
-			return 'No se ha podido conectar con la base de datos en SELECT idHoraPosible.';
-		} else {
-			$result = $resultado->fetch_array();
-			$idHoraPosibleC = $result['id'];
-		}
-		$sql = "SELECT idCalendarioHoras AS id FROM calendario_horas WHERE idCalendario='" . $idCalendario . "' AND idAsignatura='" . $idAsignatura . "' AND idHoraPosible='" . $idHoraPosibleC . "'";
-		if ($resultado = $this->mysqli->query($sql)) {
-			$result = $resultado->fetch_array();
-			$idHora = $result['id'];
-			if(!($idHora)){
-				$sql6 = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "','" . $idAsignatura . "', '" . $idCurso . "','" . $idHoraPosibleC . "', NULL )";
-				if (!($resultado = $this->mysqli->query($sql6))) {
-					return 'Error en la inserción de calendario.';
-				} 
-			}
-		}else{
-			$sql6 = "INSERT INTO calendario_horas( idCalendario, idAsignatura, idCurso, idHoraPosible, idAlerta) VALUES ('" . $idCalendario . "','" . $idAsignatura . "', '" . $idCurso . "','" . $idHoraPosibleC . "', NULL )";
-			if (!($resultado = $this->mysqli->query($sql6))) {
-				return 'Error en la inserción de calendario.';
-			} 
-		}
-		
+		}	
 		return 'Inserción realizada con éxito.';
     }
 

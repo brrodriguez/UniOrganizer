@@ -28,7 +28,7 @@ class ALERTA_Ver {
 
                 <div class="form-group">
                     <label class="control-label" ><?php echo $strings['descripcionAlerta']; ?></label><br>
-                    <textarea rows="20" cols="70" name="descripcionAlerta" readonly="true"><?php echo $this->valores['descripcionAlerta'];?></textarea>             
+                    <textarea rows="8" cols="70" name="descripcionAlerta" readonly="true"><?php echo $this->valores['descripcionAlerta'];?></textarea>             
                 </div>
 
 
