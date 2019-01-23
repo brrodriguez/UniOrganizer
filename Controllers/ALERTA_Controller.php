@@ -35,7 +35,6 @@ function get_data_form() {
 switch ($_REQUEST['accion']) { //Actúa según la acción elegida
     case $strings['Crear']:
 
-        case $strings['Crear']:
         if (!tienePermisos('ALERTA_Insertar')) {
             new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
         } else {
@@ -43,7 +42,6 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 				$usuario = new USUARIO_Modelo($_SESSION['login'], $_SESSION['pass'], '', '', '', '', '', '', '', '');
 				$cursos = $usuario->listarMisCursos();              
                 new ALERTA_Insertar( $cursos, '../Controllers/ALERTA_Controller.php');
-                
 
             } else {
 				//Se transforma algún dato para obtener el formato correcto y se crean las alertas
@@ -65,6 +63,35 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 					$alerta2 = new ALERTA_Model( '', $asunto, $_REQUEST['descripcionAlerta']);
 					$alerta2->Insertar($nuevafecha, $_REQUEST['hora'], $idCurso);
 				}
+                new Mensaje($respuesta, '../Controllers/ALERTA_Controller.php');
+            }
+        }
+		
+	case $strings['Añadir']:
+
+        if (!tienePermisos('ALERTA_Añadir')) {
+            new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
+        } else {
+            if (!isset($_REQUEST['username'])) {
+				$datos = obtenerDatosEntrega($_REQUEST['idCalendarioHoras']);
+                new ALERTA_Añadir( $datos, '../Controllers/ALERTA_Controller.php');
+
+            } else {
+				//Se transforma algún dato para obtener el formato correcto y se crean las alertas
+				$idCurso = $_REQUEST['curso'];
+				$fecha = $_REQUEST['fecha'];
+				$menos = '-';
+				$dias = $_REQUEST['dias'];
+				$day = ' day';
+				$dia = $menos . $dias . $day;
+				$nuevafecha = strtotime ( $dia , strtotime ( $fecha ) ) ;
+				$nuevafecha = date ( 'Y-m-j' , $nuevafecha );
+				//Se crea un aviso con x días de antelación
+				$aviso1 = "AVISO: ";
+				$aviso2 = " dias para ";
+				$asunto = $aviso1 . $dias . $aviso2;
+				$alerta2 = new ALERTA_Model( '', $asunto, $_REQUEST['descripcionAlerta']);
+				$respuesta = $alerta2->Insertar($nuevafecha, $_REQUEST['hora'], $idCurso);
                 new Mensaje($respuesta, '../Controllers/ALERTA_Controller.php');
             }
         }

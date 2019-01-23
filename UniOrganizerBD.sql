@@ -104,12 +104,14 @@ INSERT INTO `pagina` (`idPagina`, `linkPagina`, `nombrePagina`) VALUES
 (152, '../Views/CURSO_EDIT_Vista.php', 'Curso EDIT'),
 (153, '../Views/CURSO_SHOW_Vista.php', 'Curso SHOW'),
 (154, '../Views/CURSO_ASIGN_Vista.php', 'Curso ASIGN'),
-(155, '../Views/CURSO_IMPORT_Vista.php', 'Curso ASIGN'),
-(156, '../Views/CURSO_DELETE_Vista.php', 'Curso ASIGN'),
+(155, '../Views/CURSO_IMPORT_Vista.php', 'Curso IMPORT'),
+(156, '../Views/CURSO_DELETE_Vista.php', 'Curso DELETE'),
+(157, '../Views/CURSO_FILTER_Vista.php', 'Curso FILTER'),
 (200, '../Views/ALERTA_SHOWALL_Vista.php', 'Alerta SHOWALL'),
 (201, '../Views/ALERTA_SHOW_Vista.php', 'Alerta SHOW'),
-(202, '../Views/ALERTA_DELETE_Vista.php', 'Alerta DELETE'),
-(203, '../Views/ALERTA_ADD_Vista.php', 'Alerta ADD');
+(202, '../Views/ALERTA_ADD_Vista.php', 'Alerta ADD'),
+(203, '../Views/ALERTA_DELETE_Vista.php', 'Alerta DELETE'),
+(204, '../Views/ALERTA_ENTREGA_ADD_Vista.php', 'Alerta Entrega ADD');
 
 -- --------------------------------------------------------
 
@@ -143,10 +145,12 @@ INSERT INTO `funcionalidad` (`idFuncionalidad`, `nombreFuncionalidad`, `categori
 (154, 'Asignar Asignaturas', 'Gestion Cursos'),
 (155, 'Importar Curso', 'Gestion Cursos'),
 (156, 'Borrar Curso', 'Gestion Cursos'),
-(200, 'Listar Alertas', 'Gestion Alertas'),
-(201, 'Ver Alerta', 'Gestion Alertas'),
-(202, 'Insertar Alerta', 'Gestion Alertas'),
-(203, 'Baja Alerta', 'Gestion Alertas');
+(157, 'Filtrar Cursos', 'Gestion Cursos'),
+(200, 'Listar Eventos', 'Gestion Eventos'),
+(201, 'Ver Evento', 'Gestion Eventos'),
+(202, 'Insertar Evento', 'Gestion Eventos'),
+(203, 'Baja Evento', 'Gestion Eventos'),
+(204, 'Añadir Evento', 'Gestion Eventos');
 
 -- --------------------------------------------------------
 
@@ -179,10 +183,12 @@ INSERT INTO `funcionalidad_pagina` (`idFuncionalidad`, `idPagina`) VALUES
 (154, 154),
 (155, 155),
 (156, 156),
+(157, 157),
 (200, 200),
 (201, 201),
 (202, 202),
-(203, 203);
+(203, 203),
+(204, 204);
 
 -- --------------------------------------------------------
 
@@ -215,7 +221,6 @@ INSERT INTO `funcionalidad_rol` (`idFuncionalidad`, `idRol`) VALUES
 (101, 1),
 (150, 1),
 (150, 2),
-(151, 1),
 (151, 2),
 (152, 1),
 (152, 2),
@@ -227,14 +232,15 @@ INSERT INTO `funcionalidad_rol` (`idFuncionalidad`, `idRol`) VALUES
 (155, 2),
 (156, 1),
 (156, 2),
+(157, 1),
 (200, 1),
 (200, 2),
 (201, 1),
 (201, 2),
-(202, 1),
 (202, 2),
 (203, 1),
-(203, 2);
+(203, 2),
+(204, 2);
 
 -- --------------------------------------------------------
 
@@ -4645,7 +4651,8 @@ CREATE TABLE `calendario_horas` (
   `idCalendarioHoras` int(11) NOT NULL,
   `idCalendario` int(11) NOT NULL,
   `idAsignatura` int(11),
-  `idCurso` int(11),
+  `idCurso` int(11) NOT NULL,
+  `asuntoEntrega` varchar(400) COLLATE utf8_spanish_ci,
   `idHoraPosible` int(11) NOT NULL,
   `idAlerta` int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
@@ -4653,25 +4660,25 @@ CREATE TABLE `calendario_horas` (
 --
 -- Volcado de datos para la tabla `calendario_horas`
 --
-insert into `calendario_horas` (`idCalendarioHoras`, `idCalendario`, `idAsignatura`, `idCurso`, `idHoraPosible`, `idAlerta`) values
-  (1, 1, 1, 1, 840, NULL),
-  (2, 1, NULL, NULL, 890, 1),
-  (3, 1, 3, 3, 930, NULL),
-  (4, 1, 4, 4, 920, NULL),
-  (5, 1, 2, 3, 855, NULL),
-  (6, 1, 1, 4, 860, NULL),
-  (7, 1, 3, 3, 880, NULL),
-  (8, 1, 4, 4, 844, NULL),
-  (9, 1, 2, 3, 882, NULL),
-  (10, 3, NULL, NULL, 900, 2),
-  (11, 3, 1, 3, 870, NULL),
-  (12, 3, 2, 4, 877, NULL),
-  (13, 3, 3, 3, 852, NULL),
-  (14, 3, 4, 4, 901, NULL),
-  (15, 3, 1, 3, 922, NULL),
-  (16, 3, 2, 4, 911, NULL),
-  (17, 3, 3, 3, 905, NULL),
-  (18, 3, 4, 4, 888, NULL);
+insert into `calendario_horas` (`idCalendarioHoras`, `idCalendario`, `idAsignatura`, `idCurso`, `asuntoEntrega`, `idHoraPosible`, `idAlerta`) values
+  (1, 1, 1, 1, "Entrega", 840, NULL),
+  (2, 1, NULL, 2, NULL, 890, 1),
+  (3, 1, 3, 3, "Entrega", 930, NULL),
+  (4, 1, 4, 4, "Entrega", 920, NULL),
+  (5, 1, 2, 3, "Entrega", 855, NULL),
+  (6, 1, 1, 4, "Entrega", 860, NULL),
+  (7, 1, 3, 3, "Entrega", 880, NULL),
+  (8, 1, 4, 4, "Entrega", 844, NULL),
+  (9, 1, 2, 3, "Entrega", 882, NULL),
+  (10, 3, NULL, 4, NULL, 900, 2),
+  (11, 3, 1, 3, "Entrega", 870, NULL),
+  (12, 3, 2, 4, "Entrega", 877, NULL),
+  (13, 3, 3, 3, "Entrega", 852, NULL),
+  (14, 3, 4, 4, "Entrega", 900, NULL),
+  (15, 3, 1, 3, "Entrega", 922, NULL),
+  (16, 3, 2, 4, "Entrega", 911, NULL),
+  (17, 3, 3, 3, "Entrega", 905, NULL),
+  (18, 3, 4, 4, "Entrega", 888, NULL);
 
 --
 -- Índices para tablas volcadas

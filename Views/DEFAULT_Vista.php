@@ -14,7 +14,9 @@
 				<link rel="stylesheet" href="../css/themes/alertify.core.css" />
 				<link rel="stylesheet" href="../css/themes/alertify.default.css" />
 			</head>
-			
+			<?php
+			if(ConsultarTipoUsuarioLogin()==2){
+			?>
 			<div class="container">
 				<?php
 					$c=0;
@@ -33,6 +35,8 @@
 				  }
 				  $contE = $_SESSION['contador']-1;
 				  ?>
+				  
+				<div class="row top-buffer">
 				<table>
 					<thead>
 					<tr>
@@ -86,6 +90,7 @@
 					</tr>
 				  </thead>
 				</table>
+				</div>
 				
 				<div class="row top-buffer">
 				<table class="table">
@@ -204,12 +209,13 @@
 						<td width=50 bgcolor=#C0C0C0>
 					  <?php foreach ($_SESSION['Lunes'] as $day => $value) {?>
 								<li><?php echo $value["horaInicio"]." - ".$value["horaFin"] ?></li>
-							  <?php if($value["nombreAsignatura"]){?>
+							  <?php if($value["nombreAsignatura"]){
+										if($value["asuntoEntrega"]){?>
 										<div style="color: blue;">
-											<li><b><a><?php echo $strings["Examen"]."\n" ?></a></b></li>
-											<li><a><?php echo $value["nombreAsignatura"]."\n" ?></a></li>
+											<li><b><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"] . '&accion=' . $strings['Añadir']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
 											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
 										</div>
+										<?php } ?>
 							  <?php } else { ?>
 										<div style="color: orange;">
 											<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>
@@ -221,12 +227,13 @@
 						<td width=50>
 						  <?php foreach ($_SESSION['Martes'] as $day => $value) {?>
 								<li><?php echo $value["horaInicio"]." - ".$value["horaFin"] ?></li>
-							  <?php if($value["nombreAsignatura"]){?>							
+							   <?php if($value["nombreAsignatura"]){
+										if($value["asuntoEntrega"]){?>
 										<div style="color: blue;">
-											<li><b><a><?php echo $strings["Examen"]."\n" ?></a></b></li>
-											<li><a><?php echo $value["nombreAsignatura"]."\n" ?></a></li>
+											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
 											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
 										</div>
+										<?php } ?>
 							  <?php } else { ?>
 										<div style="color: orange;">
 											<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>
@@ -238,10 +245,13 @@
 						<td width=50 bgcolor=#C0C0C0>
 						  <?php foreach ($_SESSION['Miercoles'] as $day => $value) {?>
 								<li><?php echo $value["horaInicio"]." - ".$value["horaFin"] ?></li>
-							  <?php if($value["nombreAsignatura"]){?>
-										<li><b><a><?php echo $strings["Examen"]."\n" ?></a></b></li>
-										<li><a><?php echo $value["nombreAsignatura"]."\n" ?></a></li>
-										<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
+							   <?php if($value["nombreAsignatura"]){
+										if($value["asuntoEntrega"]){?>
+										<div style="color: blue;">
+											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
+											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
+										</div>
+										<?php } ?>
 							  <?php } else { ?>
 										<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>										
 							  <?php } ?>							  
@@ -251,10 +261,13 @@
 						<td width=50>
 						  <?php foreach ($_SESSION['Jueves'] as $day => $value) {?>
 								<li><?php echo $value["horaInicio"]." - ".$value["horaFin"] ?></li>
-							  <?php if($value["nombreAsignatura"]){?>
-										<li><b><a><?php echo $strings["Examen"]."\n" ?></a></b></li>
-										<li><a><?php echo $value["nombreAsignatura"]."\n" ?></a></li>
-										<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
+							   <?php if($value["nombreAsignatura"]){
+										if($value["asuntoEntrega"]){?>
+										<div style="color: blue;">
+											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
+											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
+										</div>
+										<?php } ?>
 							  <?php } else { ?>
 										<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>									
 							  <?php } ?>							  
@@ -264,10 +277,13 @@
 						<td width=50 bgcolor=#C0C0C0>
 						  <?php foreach ($_SESSION['Viernes'] as $day => $value) {?>
 								<li><?php echo $value["horaInicio"]." - ".$value["horaFin"] ?></li>
-							  <?php if($value["nombreAsignatura"]){?>
-										<li><b><a><?php echo $strings["Examen"]."\n" ?></a></b></li>
-										<li><a><?php echo $value["nombreAsignatura"]."\n" ?></a></li>
-										<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
+							   <?php if($value["nombreAsignatura"]){
+										if($value["asuntoEntrega"]){?>
+										<div style="color: blue;">
+											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
+											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
+										</div>
+										<?php } ?>
 							  <?php } else { ?>
 										<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>									
 							  <?php } ?>							  
@@ -277,10 +293,13 @@
 						<td width=50>
 						  <?php foreach ($_SESSION['Sabado'] as $day => $value) {?>
 								<li><?php echo $value["horaInicio"]." - ".$value["horaFin"] ?></li>
-							  <?php if($value["nombreAsignatura"]){?>
-										<li><b><a><?php echo $strings["Examen"]."\n" ?></a></b></li>
-										<li><a><?php echo $value["nombreAsignatura"]."\n" ?></a></li>
-										<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
+							   <?php if($value["nombreAsignatura"]){
+										if($value["asuntoEntrega"]){?>
+										<div style="color: blue;">
+											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
+											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
+										</div>
+										<?php } ?>
 							  <?php } else { ?>
 										<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>									
 							  <?php } ?>							  
@@ -290,10 +309,13 @@
 						<td width=50 bgcolor=#C0C0C0>
 						  <?php foreach ($_SESSION['Domingo'] as $day => $value) {?>
 								<li><?php echo $value["horaInicio"]." - ".$value["horaFin"] ?></li>
-							  <?php if($value["nombreAsignatura"]){?>	
-										<li><b><a><?php echo $strings["Examen"]."\n" ?></a></b></li>
-										<li><a><?php echo $value["nombreAsignatura"]."\n" ?></a></li>
-										<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
+							   <?php if($value["nombreAsignatura"]){
+										if($value["asuntoEntrega"]){?>
+										<div style="color: blue;">
+											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
+											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
+										</div>
+										<?php } ?>
 							  <?php } else { ?>
 										<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>									
 							  <?php } ?>							  
@@ -304,8 +326,8 @@
 				  </tbody>
 				</table>
 				</div>
-				</div>
-
-		<?php
+			</div>
+			<?php
+			}
 		include_once '../Views/footer.php';
 ?>

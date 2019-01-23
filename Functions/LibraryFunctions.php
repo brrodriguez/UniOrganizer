@@ -170,8 +170,8 @@ function añadirFuncionalidades($NOM) {
                     ?><li><a style="font-size:15px;" href="../Controllers/CURSO_Controller.php"><?php echo $strings['Gestión de Cursos']; ?></a></li> <?php
                     break;			
 					
-                case "Gestion Alertas":
-                    ?><li><a style="font-size:15px;" href="../Controllers/ALERTA_Controller.php"><?php echo $strings['Gestión de Alertas']; ?></a></li> <?php
+                case "Gestion Eventos":
+                    ?><li><a style="font-size:15px;" href="../Controllers/ALERTA_Controller.php"><?php echo $strings['Gestión de Eventos']; ?></a></li> <?php
                     break;
 				
 				case "Gestion Asignaturas":
@@ -292,6 +292,20 @@ function ObtenerCalendario($username) {
     return $toret['idCalendario'];
 }
 
+//Devuelve el username del calendario a partir del id
+function ObtenerUsername($id) {
+    $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
+    if ($mysqli->connect_errno) {
+        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    }
+    $sql = "SELECT username FROM calendario WHERE idCalendario= '" . $id . "'";
+	if (!($result = $mysqli->query($sql))) {
+            return 'Error en la función obtenerCalendario.';
+    }
+	$toret = $result->fetch_array();
+    return $toret['username'];
+}
+
 //Devuelve el ID del último curso insertado
 function obtenerUltimoCurso() {
     $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
@@ -341,76 +355,232 @@ function obtenerIdAsignatura($asignatura) {
     }
 }
 
+
+//Devuelve los datos de una entrega
+    function obtenerDatosEntrega($idCalendarioHoras) {
+        $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
+		if ($mysqli->connect_errno) {
+			echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+		}
+		
+        $sql = "SELECT A.asuntoEntrega, A.idCurso, B.dia, B.horaInicio FROM calendario_horas A, horas_posibles B WHERE A.idHoraPosible=B.idHoraPosible AND idCalendarioHoras= '" . $idCalendarioHoras . "'";
+        if (($resultado = $mysqli->query($sql))) {
+            $result = $resultado->fetch_array();
+            return $result;
+        } else {
+            return 'Error en la consulta sobre la base de datos.';
+        }
+    }
+
+//Devuelve el número de eventos do los dos días siguientes.
+function numEventosAlertas($fecha1, $fecha2) {
+    $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
+    if ($mysqli->connect_errno) {
+        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    }
+
+    $sql = "SELECT count(*) AS num FROM calendario_horas A, horas_posibles B WHERE A.idHoraPosible=B.idHoraPosible AND (B.dia='" . $fecha1 . "' OR B.dia='" . $fecha2 . "')";
+    if (!($resultado = $mysqli->query($sql))) {
+        return 'Error en la consulta sobre la base de datos.';
+    } else {
+        $toret = $resultado->fetch_array();
+        $numE = $toret['num'];
+		return $numE;
+    }
+}
+
+use om\icalparser;
+
+require_once 'C:\xampp\htdocs\UniOrganizer2\vendor\autoload.php';
+
+function extraerEntregasPrimero(){
+	
+	$cal = new \om\IcalParser();
+	$results = $cal->parseFile('https://calendar.google.com/calendar/ical/d8vvuc64s6rcfv1hlhkq4la4mk%40group.calendar.google.com/public/basic.ics');
+
+	$i = 0;
+	$asig = 0;
+	foreach($cal->getSortedEvents() as $entrega) {
+		$primero[$asig][$i] = $entrega['SUMMARY'];
+		$i++;
+		$primero[$asig][$i] = $entrega['DTSTART'];
+		$i=0;
+		$asig++;
+	}
+	return $primero;
+}
+
+function extraerEntregasSegundo(){
+	
+	$cal = new \om\IcalParser();
+	$results = $cal->parseFile('https://calendar.google.com/calendar/ical/3rbodu85ckfn4uois54j2gl44o%40group.calendar.google.com/public/basic.ics');
+
+	$i = 0;
+	$asig = 0;
+	foreach($cal->getSortedEvents() as $entrega) {
+		$segundo[$asig][$i] = $entrega['SUMMARY'];
+		$i++;
+		$segundo[$asig][$i] = $entrega['DTSTART'];
+		$i=0;
+		$asig++;
+	}
+	return $segundo;
+}
+
+function extraerEntregasTercero(){
+	
+	$cal = new \om\IcalParser();
+	$results = $cal->parseFile('https://calendar.google.com/calendar/ical/5c07h2s70e1m0qarhruhekoai8%40group.calendar.google.com/public/basic.ics');
+
+	$i = 0;
+	$asig = 0;
+	foreach($cal->getSortedEvents() as $entrega) {
+		$tercero[$asig][$i] = $entrega['SUMMARY'];
+		$i++;
+		$tercero[$asig][$i] = $entrega['DTSTART'];
+		$i=0;
+		$asig++;
+	}
+	return $tercero;
+}
+
+function extraerEntregasCuarto(){
+	
+	$cal = new \om\IcalParser();
+	$results = $cal->parseFile('https://calendar.google.com/calendar/ical/uqiavmf6o994nq2f7jtct0kc4s%40group.calendar.google.com/public/basic.ics');
+
+	$i = 0;
+	$asig = 0;
+	foreach($cal->getSortedEvents() as $entrega) {
+		$cuarto[$asig][$i] = $entrega['SUMMARY'];
+		$i++;
+		$cuarto[$asig][$i] = $entrega['DTSTART'];
+		$i=0;
+		$asig++;
+	}
+	return $cuarto;
+}
+
 include("../Librerías/simplehtmldom/simple_html_dom.php");
 //Funcion para extraer de la web de la universidad, mediante web scraping, todas las asignaturas del grado
 function extraerAsignaturas(){
     // Creamos un objeto DOM directamente desde una URL
-	$html = file_get_html('http://historia.uvigo.es/es/docencia/guias-docentes');
-	$i=0;
-	// buscamos todos los elementos <a> y nos quedamos con los que nos interesan
+	$html = file_get_html('https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/index.php?centre=103&ensenyament=O03G081V01&consulta=assignatures');
+	$i = 0;
+	// buscamos los elementos <div> con un id concreto y nos quedamos con los <td> de su interior
 	foreach($html->find('a') as $element){
-		if (strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura') !== false) {
-			$array[$i] = $element->innertext;
-			$i++;
+		if (strpos($element->href, '?centre=103&ensenyament=O03G081V01&assignatura=') !== false) {
+			if(strpos($element->innertext, ':') !== false){
+				$nombre = preg_split('/:\s/', $element->innertext);
+				$array[$i] = $nombre[1];
+				$i++;
+			}else{
+				$array[$i] = $element->innertext;
+				$i++;
+			}
 		}	
-	}	
+	}
+	return $array;	
+}
+
+function extraerAsignaturasGuia(){
+    // Creamos un objeto DOM directamente desde una URL
+	$html = file_get_html('https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/index.php?centre=103&ensenyament=O03G081V01&consulta=assignatures');
+	$i = 0;
+	$c = 0;
+	// buscamos los elementos <div> con un id concreto y nos quedamos con los <td> de su interior
+	foreach($html->find('a') as $element){
+		if (strpos($element->href, '?centre=103&ensenyament=O03G081V01&assignatura=') !== false) {
+			if(strpos($element->innertext, ':') !== false){
+				$nombre = preg_split('/:\s/', $element->innertext);			
+				$array[$c][$i] = $nombre[1];
+				$i++;
+				$href = $element->href;
+				$array[$c][$i] = $href;
+				$i=0;
+				$c++;
+			}else{
+				$array[$c][$i] = $element->innertext;
+				$i++;
+				$href = $element->href;
+				$array[$c][$i] = $href;
+				$i=0;
+				$c++;
+			}
+		}	
+	}
 	return $array;	
 }
 
 //Funcion para extraer de la web de la universidad, mediante web scraping, los distintos cursos y sus asignaturas correspondientes
 function extraerCursos($curso){	
-	$i=0;
-	
+	$i = 0;
 	if($curso==1){
 		// Creamos un objeto DOM directamente desde una URL
-		$html = file_get_html('http://historia.uvigo.es/es/docencia/guias-docentes#gxh1c');
+		$html = file_get_html('https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/index.php?centre=103&ensenyament=O03G081V01&consulta=assignatures');
 		// buscamos todos los elementos <a> y nos quedamos con los que nos interesan
-		foreach($html->find('table[class=table table-bordered table-condensed]') as $element){
-			foreach($element->find('a') as $element){
-				if (strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V011') !== false or strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V012') !== false) {
+		foreach($html->find('a') as $element){
+			if (strpos($element->href, '?centre=103&ensenyament=O03G081V01&assignatura=O03G081V011') !== false or strpos($element->href, '?centre=103&ensenyament=O03G081V01&assignatura=O03G081V012') !== false) {
+				if(strpos($element->innertext, ':') !== false){
+					$nombre = preg_split('/:\s/', $element->innertext);
+					$array[$i] = $nombre[1];
+					$i++;
+				}else{
 					$array[$i] = $element->innertext;
 					$i++;
 				}
-			}
+			}	
 		}
 	}else{
 		if($curso==2){
 			// Creamos un objeto DOM directamente desde una URL
-			$html = file_get_html('http://historia.uvigo.es/es/docencia/guias-docentes#gxh2c');
+			$html = file_get_html('https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/index.php?centre=103&ensenyament=O03G081V01&consulta=assignatures');
 			// buscamos todos los elementos <a> y nos quedamos con los que nos interesan
-			foreach($html->find('table[class=table table-bordered table-condensed]') as $element){
-				foreach($element->find('a') as $element){
-					if (strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V013') !== false or strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V014') !== false) {
+			foreach($html->find('a') as $element){
+				if (strpos($element->href, '?centre=103&ensenyament=O03G081V01&assignatura=O03G081V013') !== false or strpos($element->href, '?centre=103&ensenyament=O03G081V01&assignatura=O03G081V014') !== false) {
+					if(strpos($element->innertext, ':') !== false){
+						$nombre = preg_split('/:\s/', $element->innertext);
+						$array[$i] = $nombre[1];
+						$i++;
+					}else{
 						$array[$i] = $element->innertext;
 						$i++;
 					}
-				}
+				}	
 			}
 		}else{
 			if($curso==3){
 				// Creamos un objeto DOM directamente desde una URL
-				$html = file_get_html('http://historia.uvigo.es/es/docencia/guias-docentes#gxh3c');
+				$html = file_get_html('https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/index.php?centre=103&ensenyament=O03G081V01&consulta=assignatures');
 				// buscamos todos los elementos <a> y nos quedamos con los que nos interesan
-				foreach($html->find('table[class=table table-bordered table-condensed]') as $element){
-					foreach($element->find('a') as $element){
-						if (strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V015') !== false or strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V016') !== false) {
+				foreach($html->find('a') as $element){
+					if (strpos($element->href, '?centre=103&ensenyament=O03G081V01&assignatura=O03G081V015') !== false or strpos($element->href, '?centre=103&ensenyament=O03G081V01&assignatura=O03G081V016') !== false) {
+						if(strpos($element->innertext, ':') !== false){
+							$nombre = preg_split('/:\s/', $element->innertext);
+							$array[$i] = $nombre[1];
+							$i++;
+						}else{
 							$array[$i] = $element->innertext;
 							$i++;
 						}
-					}
+					}	
 				}
 			}else{
 				if($curso==4){
 					// Creamos un objeto DOM directamente desde una URL
-					$html = file_get_html('http://historia.uvigo.es/es/docencia/guias-docentes#gxh4c');
+					$html = file_get_html('https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/index.php?centre=103&ensenyament=O03G081V01&consulta=assignatures');
 					// buscamos todos los elementos <a> y nos quedamos con los que nos interesan
-					foreach($html->find('table[class=table table-bordered table-condensed]') as $element){
-						foreach($element->find('a') as $element){
-							if (strpos($element->href, 'https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/?centre=102&ensenyament=O02G251V01&assignatura=O02G251V019') !== false ) {
+					foreach($html->find('a') as $element){
+						if (strpos($element->href, '?centre=103&ensenyament=O03G081V01&assignatura=O03G081V017') !== false or strpos($element->href, '?centre=103&ensenyament=O03G081V01&assignatura=O03G081V018') !== false or strpos($element->href, '?centre=103&ensenyament=O03G081V01&assignatura=O03G081V019') !== false) {
+							if(strpos($element->innertext, ':') !== false){
+								$nombre = preg_split('/:\s/', $element->innertext);
+								$array[$i] = $nombre[1];
+								$i++;
+							}else{
 								$array[$i] = $element->innertext;
 								$i++;
 							}
-						}
+						}	
 					}
 				}
 			}
@@ -418,85 +588,3 @@ function extraerCursos($curso){
 	}
 	return $array;
 }
-
-//Funcion para extraer de la web de la universidad, mediante web scraping, todos los exámenes de las asignaturas de primero
-function extraerExamenesPrimero(){
-    // Creamos un objeto DOM directamente desde una URL
-	$html = file_get_html('http://historia.uvigo.es/es/docencia/examenes');
-	$i=1;
-	$asig = 1;
-	// buscamos los elementos <div> con un id concreto y nos quedamos con los <td> de su interior
-	foreach($html->find('div[id=gxh18191c]') as $element){
-					foreach($element->find('td') as $element){
-						$primero[$asig][$i] = $element->innertext;
-						$i++;
-						if($i==5){
-							$i=1;
-							$asig++;
-						}					
-					}
-
-	}
-	return $primero;
-}
-
-//Funcion para extraer de la web de la universidad, mediante web scraping, todos los exámenes de las asignaturas de segundo
-function extraerExamenesSegundo(){
-    // Creamos un objeto DOM directamente desde una URL
-	$html = file_get_html('http://historia.uvigo.es/es/docencia/examenes');
-	$i=1;
-	$asig = 1;
-	// buscamos los elementos <div> con un id concreto y nos quedamos con los <td> de su interior
-	foreach($html->find('div[id=gxh18192c]') as $element){
-					foreach($element->find('td') as $element){
-						$segundo[$asig][$i] = $element->innertext;
-						$i++;
-						if($i==5){
-							$i=1;
-							$asig++;
-						}					
-					}
-	}
-	return $segundo;
-}
-
-//Funcion para extraer de la web de la universidad, mediante web scraping, todos los exámenes de las asignaturas de tercero
-function extraerExamenesTercero(){
-    // Creamos un objeto DOM directamente desde una URL
-	$html = file_get_html('http://historia.uvigo.es/es/docencia/examenes');
-	$i=1;
-	$asig = 1;
-	// buscamos los elementos <div> con un id concreto y nos quedamos con los <td> de su interior
-	foreach($html->find('div[id=gxh18193c]') as $element){
-					foreach($element->find('td') as $element){
-						$tercero[$asig][$i] = $element->innertext;
-						$i++;
-						if($i==5){
-							$i=1;
-							$asig++;
-						}					
-					}	
-	}
-	return $tercero;
-}
-
-//Funcion para extraer de la web de la universidad, mediante web scraping, todos los exámenes de las asignaturas de cuarto
-function extraerExamenesCuarto(){
-    // Creamos un objeto DOM directamente desde una URL
-	$html = file_get_html('http://historia.uvigo.es/es/docencia/examenes');
-	$i=1;
-	$asig = 1;
-	// buscamos los elementos <div> con un id concreto y nos quedamos con los <td> de su interior
-	foreach($html->find('div[id=gxh18194c]') as $element){
-					foreach($element->find('td') as $element){
-						$cuarto[$asig][$i] = $element->innertext;
-						$i++;
-						if($i==5){
-							$i=1;
-							$asig++;
-						}					
-					}	
-	}
-	return $cuarto;
-}
-?>
