@@ -3,7 +3,7 @@
 //Gestión del acceso, login, selección de idioma
 include_once '../Models/USUARIO_Model.php';
 include_once '../Views/MENSAJE_Vista2.php';
-include_once '../Views/DEFAULT_Vista.php';
+
 
 
 if (isset($_REQUEST['accion'])) {
