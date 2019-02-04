@@ -1,6 +1,6 @@
 <?php
 
-class CURSO_SHOW {
+class CURSO_UNASSIGN {
 
     private $datos;
     private $volver;
@@ -30,6 +30,7 @@ class CURSO_SHOW {
 			?>
             <tr>
             <th><?php echo $valor['nombreAsignatura']; ?></th>
+            <td><a href="?accion=desasignar&idCurso=<?php echo $_GET["id"]; ?>&idAsignatura=<?php echo  $valor['idAsignatura']; ?>"><button type="button" class="btn btn-danger btn-sm">Desasignar</button></a></td>
             </tr><?php
         }
 		?>

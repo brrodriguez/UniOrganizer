@@ -29,6 +29,15 @@ class ALERTA_Model {
     function Insertar($fecha, $hora, $idCurso) {
         $this->ConectarBD();
 		
+		$hora = split($hora, ':');
+		if($hora[1]>30){
+			$hora[1] = 00;
+			$hora[0] = $hora[0]+1;
+		}else{
+			$hora[1] = 00;
+		}
+		$horaOk = $horaA[0] . ':' . $horaA[1] . ':' . $horaA[2];
+		
         $sql = "SELECT * FROM ALERTA";
         if (!$result = $this->mysqli->query($sql)) {
             return 'No se ha podido conectar con la base de datos.';
@@ -47,7 +56,7 @@ class ALERTA_Model {
 				$idInsertada = $result['id'];
 			}
 			
-			$sql = "SELECT idHoraPosible AS id FROM horas_posibles WHERE dia='" . $fecha . "' AND horaInicio='" . $hora . "'";
+			$sql = "SELECT idHoraPosible AS id FROM horas_posibles WHERE dia='" . $fecha . "' AND horaInicio='" . $horaOk . "'";
 			if (!($resultado = $this->mysqli->query($sql))) {
 				return 'No se ha podido conectar con la base de datos en SELECT idHora.';
 			} else {
@@ -64,6 +73,45 @@ class ALERTA_Model {
 				return 'No se ha podido conectar con la base de datos en INSERT calendario_horas.';
 			}
         
+            return 'Inserción realizada con éxito';
+        }
+    }
+	
+	//Inserta una alerta y su correspondiente evento en el calendario
+    function Modificar($fecha, $hora, $idCalendarioHoras) {
+        $this->ConectarBD();
+		
+		$hora = split($hora, ':');
+		if($hora[1]>30){
+			$hora[1] = 00;
+			$hora[0] = $hora[0]+1;
+		}else{
+			$hora[1] = 00;
+		}
+		$horaOk = $horaA[0] . ':' . $horaA[1] . ':' . $horaA[2];
+		
+        $sql = "SELECT * FROM ALERTA";
+        if (!$result = $this->mysqli->query($sql)) {
+            return 'No se ha podido conectar con la base de datos.';
+        } else {
+			
+			$sql = "UPDATE alerta SET asuntoAlerta='" . $this->asuntoAlerta . "', descripcionAlerta='" . $this->descripcionAlerta . "' WHERE idAlerta='" . $this->idAlerta . "'";
+			if (!($resultado = $this->mysqli->query($sql))) {
+				return 'Error en update alerta.';
+			}
+			
+			$sql = "SELECT idHoraPosible AS id FROM horas_posibles WHERE dia='" . $fecha . "' AND horaInicio='" . $horaOk . "'";
+			if (!($resultado = $this->mysqli->query($sql))) {
+				return 'No se ha podido conectar con la base de datos en SELECT idHora.';
+			} else {
+				$result = $resultado->fetch_array();
+				$idHoraPosible = $result['id'];
+			}
+			
+			$sql = "UPDATE calendario_horas SET idHoraPosible='" . $idHoraPosible . "', idAlerta='" . $this->idAlerta . "' WHERE idCalendarioHoras='" . $idCalendarioHoras . "'";
+			if (!($resultado = $this->mysqli->query($sql))) {
+				return 'Error al actualizar el evento.';
+			}
             return 'Inserción realizada con éxito';
         }
     }

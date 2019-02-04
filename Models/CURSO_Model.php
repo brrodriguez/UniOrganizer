@@ -71,7 +71,7 @@ class CURSO_Model {
 			if (!($resultado = $this->mysqli->query($sql))) {
 				return 'Error en la consulta sobre la base de datos.';
 			}else{
-				return true;
+				return 'Curso eliminado correctamente.';
 			}  
         }
     }
@@ -80,13 +80,18 @@ class CURSO_Model {
     function insertarCurso() {
         $this->ConectarBD();
 		
-        $sql = "INSERT INTO curso (nombreCurso, descripcionCurso, idCalendario) VALUES ('" . $this->nombreCurso . "','" . $this->descripcionCurso . "','" . $this->idCalendario . "')";
-        if (!($resultado = $this->mysqli->query($sql))) {
-            return 'Error en la inserción de curso.';
+		$sql = "SELECT idCurso FROM curso WHERE nombreCurso = '" . $this->nombreCurso . "'";
+		$resultado = $this->mysqli->query($sql);
+        if ($resultado->num_rows == 0) {
+			$sql = "INSERT INTO curso (nombreCurso, descripcionCurso, idCalendario) VALUES ('" . $this->nombreCurso . "','" . $this->descripcionCurso . "','" . $this->idCalendario . "')";
+			if (!($resultado = $this->mysqli->query($sql))) {
+				return 'Error en la inserción de curso.';
+			} else {
+				return 'Inserción realizada con éxito';
+			}
         } else {
-            return 'Inserción realizada con éxito';
-        }
-		
+			return 'Error: ya existe un curso con ese nombre.';
+		}
     }
 	
 //Permite filtrar por nombre de usuario
@@ -187,7 +192,7 @@ class CURSO_Model {
         if (!($resultado = $this->mysqli->query($sql))) {
             return 'Error en la consulta sobre la base de datos.';
         } else {
-            return true;
+            return 'Curso modificado correctamente.';
         }
     }
 	
@@ -198,7 +203,9 @@ class CURSO_Model {
         $sql = "INSERT INTO asignatura_curso VALUES ('" . $idCurso . "','" . $idAsignatura . "')";
         if (!($resultado = $this->mysqli->query($sql))) {
             return 'Error en la consulta sobre la base de datos.';
-        }
+        }else{
+			return 'Asignaturas asignadas correctamente.';
+		}
     }
 
 //Elimina una asignatura de de un curso
@@ -213,6 +220,7 @@ class CURSO_Model {
         if (!($resultado = $this->mysqli->query($sql))) {
             return 'Error en la consulta sobre la base de datos.';
         }
+		return 'Asignaturas eliminadas correctamente.';
     }
 
 //Devuelve las asignaturas pertenecientes al curso especificado

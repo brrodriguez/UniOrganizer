@@ -9,7 +9,7 @@
 
 class ALERTA_Añadir {
 
-	private $cursos;
+	private $datos;
     private $volver;
 
     function __construct( $datos, $volver) {
@@ -19,12 +19,9 @@ class ALERTA_Añadir {
     }
 
     function render() {
-        ?><script type="text/javascript" src="../js/<?php echo $_SESSION['IDIOMA'] ?>_validate.js"></script>
-        <?php include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php';
-			echo $this->datos['horaInicio'];
-			echo $this->datos['dia'];
-			echo $this->datos['idCurso'];?>
-                  
+		?>
+        <script type="text/javascript" src="../js/validate.js"></script>
+        <?php include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php';?>      
 
         <div class="container" >
             <form  id="form" name="form" action='ALERTA_Controller.php'  method='post'   enctype="multipart/form-data">
@@ -56,11 +53,11 @@ class ALERTA_Añadir {
 				<h4><b><?php echo $strings['Aviso']; ?></b></h4>
 				
 				<div class="form-group">
-                    <label class="control-label" ><?php echo $strings['Dias']; ?></label><br>
+                    <label class="control-label" ><?php echo $strings['Dias']; ?>*</label><br>
                     <input class="form" id="dias" name="dias" type="text" required="true"/>
                 </div>
 				
-                <input type='submit' onclick="" name='accion'  value="<?php echo $strings['Añadir']; ?>">
+                <input type='submit' onclick="return valida_envia_ALERTA()" name='accion'  value="<?php echo $strings['Añadir']; ?>">
                 <a class="form-link" href="<?php echo $this->volver ?>"><?php echo $strings['Volver']; ?></a>
             </form>
         </div>

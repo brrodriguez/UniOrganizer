@@ -2,7 +2,6 @@
 
 class USUARIO_Select {
 
-//VISTA PARA LISTAR TODOS LOS USUARIOS
     private $volver;
 
     function __construct($volver) {

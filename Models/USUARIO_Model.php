@@ -450,6 +450,40 @@ function get_day($calendarioHoras,$horas,$asignaturas,$cursos,$alertas,$wd,$sema
 		}
 		return $array;
 	}
+	
+	function sendEmail($email, $username, $password){
+		require_once("C:/xampp/htdocs/UniOrganizer/mail/class.phpmailer.php");
+
+		//Receive all the parameters of the form
+		$para = $email;
+		$asunto = "Registro";
+		$mensaje = "Bienvenido a UniOrganizer.\r/nUsuario: " . $username . "\r\nContraseña: " . $password . "";
+
+		//This block is important
+		$mail = new PHPMailer();
+		$mail->IsSMTP();
+		$mail->SMTPAuth = true;
+		$mail->SMTPSecure = "ssl";
+		$mail->Host = "smtp.gmail.com";
+		$mail->Port = 465;
+		// Activate condification utf-8
+		$mail->CharSet = 'UTF-8';
+
+		//Our account
+		$mail->Username ='uniorganizerapplication@gmail.com';
+		$mail->Password = 'uniorganizer3.'; //Su password
+
+		//Add recipient
+		$mail->AddAddress($para);
+		$mail->Subject = $asunto;
+		$mail->Body = $mensaje;
+		//To attach file
+		//$mail->AddAttachment($archivo['tmp_name'], $archivo['name']);
+		$mail->MsgHTML($mensaje);
+
+		//Send email
+		$mail->Send();
+	}
 
 }
 

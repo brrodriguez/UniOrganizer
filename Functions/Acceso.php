@@ -5,7 +5,6 @@ include_once '../Models/USUARIO_Model.php';
 include_once '../Views/MENSAJE_Vista2.php';
 
 
-
 if (isset($_REQUEST['accion'])) {
 
     if ($_REQUEST['accion'] == 'Login') {

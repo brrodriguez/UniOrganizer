@@ -111,6 +111,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 			$guias = extraerAsignaturasGuia();
 			$tipoUsuario = ConsultarTipoUsuarioLogin();
 			$i=0;
+			$datos=NULL;
 			foreach($asignaturas as $asignatura){
 				foreach($guias as $guia){
 					if (strpos($guia[0], 'Dereito constitucional II') !== false) {

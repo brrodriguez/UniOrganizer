@@ -12,10 +12,10 @@ class USUARIO_Insertar {
     }
 
     function render() {
-        ?> <script type="text/javascript" src="../js/validate.js"></script>
-
+		?>
+        <script type="text/javascript" src="../js/validate.js"></script>
         <?php
-        include '../Locates/Strings_Castellano.php'; ?>
+        include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php'; ?>
 
         <div class="container" >
             <form  id="form" name="form" action='USUARIO_Controller.php?user=admin'  method='post'   enctype="multipart/form-data">
@@ -23,49 +23,48 @@ class USUARIO_Insertar {
                     <label class="control-label" ><?php echo $strings['Insertar Usuario']; ?></label><br>
                 </div>
                 <div class="form-group">
-                    <label class="control-label" ><?php echo $strings['username']; ?></label><br>
-                    <input class="form" id="username" name="username" size="20" type="text" required="true"/>
+                    <label class="control-label" ><?php echo $strings['username']; ?>*</label><br>
+                    <input onchange="return valida_envia_username()" class="form" id="username" name="username" size="20" type="text" required="true"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" ><?php echo $strings['password']; ?></label><br>
-                    <input class="form" id="password" name="password" size="20" type="password" required="true"/>
+                    <label class="control-label" ><?php echo $strings['password']; ?>*</label><br>
+                    <input onchange="return valida_envia_password()" class="form" id="password" name="password" size="20" type="password" required="true"/>
                 </div>   
 
                 <div class="form-group">
-                    <label class="control-label" ><?php echo $strings['nombre']; ?></label><br>
-                    <input class="form" id="nombre" name="nombre" size="50" type="text" required="true"/>
+                    <label class="control-label" ><?php echo $strings['nombre']; ?>*</label><br>
+                    <input onchange="return valida_envia_nombre()" class="form" id="nombre" name="nombre" size="50" type="text" required="true"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" ><?php echo $strings['apellidos']; ?></label><br>
-                    <input class="form" id="apellidos" name="apellidos" size="50" type="text" required="true"/>
+                    <label class="control-label" ><?php echo $strings['apellidos']; ?>*</label><br>
+                    <input onchange="return valida_envia_apellidos()" class="form" id="apellidos" name="apellidos" size="50" type="text" required="true"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" ><?php echo $strings['dni']; ?></label><br>
-                    <input class="form" id="dni" name="dni" size="9" type="text" required="true"/>
+                    <label class="control-label" ><?php echo $strings['dni']; ?>*</label><br>
+                    <input onchange="return valida_envia_dni()" class="form" id="dni" name="dni" size="9" type="text" required="true"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" ><?php echo $strings['fechaNac']; ?></label><br>
-                    <input class="form" id="fechaNac" name="fechaNac" type="date" required="true"/>
+                    <label class="control-label" ><?php echo $strings['fechaNac']; ?>*</label><br>
+                    <input onchange="return valida_envia_fechaNac()" class="form" id="fechaNac" name="fechaNac" type="date" required="true"/>
                 </div>
 
 
                 <div class="form-group">
-                    <label class="control-label" ><?php echo $strings['niu']; ?></label><br>
-                    <input class="form" id="niu" name="niu" size="12" type="text" required="true"/>
+                    <label class="control-label" ><?php echo $strings['niu']; ?>*</label><br>
+                    <input onchange="return valida_envia_niu()" class="form" id="niu" name="niu" size="12" type="text" required="true"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" ><?php echo $strings['email']; ?></label><br>
-                    <input class="form" id="email" name="email" size="50" type="email" required="true"/>
+                    <label class="control-label" ><?php echo $strings['email']; ?>*</label><br>
+                    <input onchange="return valida_envia_email()" class="form" id="email" name="email" size="50" type="email" required="true"/>
                 </div>
 				
 				<div class="form-group">
-                    <label class="control-label" ><?php echo $strings['tipoUsuario']; ?></label><br>
-                    <input class="form" id="tipoUsuario" name="tipoUsuario" size="10" type="text" required="true" value="<?php echo $this->numTipo ?>" readonly="true"/>
+                    <input type="hidden" id="tipoUsuario" name="tipoUsuario" size="10" type="text" required="true" value="<?php echo $this->numTipo ?>" readonly="true"/>
                 </div>
 			
 

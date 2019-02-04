@@ -116,7 +116,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 			}else{
 				if($_REQUEST['curso'] === "1") {
 					$curso = get_data_form();
-					$curso->insertarCurso();
+					$respuesta = $curso->insertarCurso();
 					$idCurso = obtenerUltimoCurso();
 					$primero = extraerCursos(1);
 					$entregas1 = extraerEntregasPrimero();
@@ -213,7 +213,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 				}else{			
 					if($_REQUEST['curso'] === "2") {
 						$curso = get_data_form();
-						$curso->insertarCurso();
+						$respuesta = $curso->insertarCurso();
 						$idCurso = obtenerUltimoCurso();
 						$segundo = extraerCursos(2);
 						$entregas2 = extraerEntregasSegundo();
@@ -301,7 +301,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 					}else{
 						if($_REQUEST['curso'] === "3") {
 							$curso = get_data_form();
-							$curso->insertarCurso();
+							$respuesta = $curso->insertarCurso();
 							$idCurso = obtenerUltimoCurso();
 							$tercero = extraerCursos(3);
 							$entregas3 = extraerEntregasTercero();
@@ -389,7 +389,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 						}else{
 							if($_REQUEST['curso'] === "4") {
 								$curso = get_data_form();
-								$curso->insertarCurso();
+								$respuesta = $curso->insertarCurso();
 								$idCurso = obtenerUltimoCurso();
 								$cuarto = extraerCursos(4);
 								$entregas4 = extraerEntregasCuarto();
@@ -543,8 +543,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 					}
 				}
 			}
-            echo '<script> location.replace("../Controllers/CURSO_Controller.php"); </script>';
-            exit(0);
+            new Mensaje($respuesta, '../Controllers/CURSO_Controller.php');
         }
         break;	
 
@@ -561,13 +560,27 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
             new CURSO_SHOW($datos, '../Controllers/CURSO_Controller.php');
         }
         break;
+		
+	case 'vistadesasignar':
+        
+        if (!tienePermisos('CURSO_ASSIGN')) {
+            new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
+        } else {
+            $curso = get_data_form();
+            $datos['curso'] = $curso->obtenerCursoDetalle($_REQUEST['id']);
+            $datos['asignaturas'] = $curso->obtenerRelacion_CursoAsignaturas($_REQUEST['id']);
+
+            require_once '../Views/CURSO_UNASSIGN_Vista.php';
+            new CURSO_UNASSIGN($datos, '../Controllers/CURSO_Controller.php');
+        }
+        break;
 
     case 'vistaasignar':
 
-        if (!tienePermisos('CURSO_ASIGN')) {
+        if (!tienePermisos('CURSO_ASSIGN')) {
             new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
 		} else {
-			require_once '../Views/CURSO_ASIGN_Vista.php';
+			require_once '../Views/CURSO_ASSIGN_Vista.php';
 			$curso = get_data_form();
 			$listaAsignaturas = extraerAsignaturas();
 			foreach ($listaAsignaturas as $key => $value) {	
@@ -748,7 +761,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
             $otros['curso'] = $curso->obtenerCursoDetalle($_REQUEST['id']);
             $otros['asignaturas'] = $curso->obtenerRelacion_CursoAsignaturas($_REQUEST['id']);
         
-			new CURSO_ASIGN( $otros, $datos, '../Controllers/CURSO_Controller.php');
+			new CURSO_ASSIGN( $otros, $datos, '../Controllers/CURSO_Controller.php');
 		}
         break;
 
@@ -767,7 +780,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
             //Guardamos la asignacion en la bd con sus correspondientes datos de forma que
             // Orden del Array
             // 0 - Id de Asignatura
-            $curso->asignarAsignatura($_REQUEST['idCurso'], $value[0]);
+            $respuesta = $curso->asignarAsignatura($_REQUEST['idCurso'], $value[0]);
 			foreach($entregas1 as $entrega){					
 				if (strpos($entrega[0], 'Dereito Constitucional I.') !== false) {
 					$datos[0] = "Dereito constitucional I";
@@ -968,17 +981,16 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 				}								
 			}
         }
-        echo '<script> location.replace("../Controllers/CURSO_Controller.php"); </script>';
-        exit(0);
+        new Mensaje($respuesta, '../Controllers/CURSO_Controller.php');
         break;
 		
 	case 'desasignar':
 
-        if (!tienePermisos('CURSO_ASIGN')) {
+        if (!tienePermisos('CURSO_UNASSIGN')) {
             new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
         } else {
             $curso = get_data_form();
-            $curso->desasignarAsignatura($_REQUEST['idCurso'], $_REQUEST['idAsignatura']);
+			$curso->desasignarAsignatura($_REQUEST['idCurso'], $_REQUEST['idAsignatura']);
             echo '<script> location.replace("../Controllers/CURSO_Controller.php"); </script>';
             exit(0);
         }
@@ -990,9 +1002,8 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
             new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
         } else {
             $curso = get_data_form();
-            $curso->insertarCurso();
-            echo '<script> location.replace("../Controllers/CURSO_Controller.php"); </script>';
-            exit(0);
+            $respuesta = $curso->insertarCurso();
+            new Mensaje($respuesta, '../Controllers/CURSO_Controller.php');
         }
         break;
 
@@ -1015,9 +1026,8 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
             new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
         } else {
             $curso = get_data_form();
-            $datos = $curso->modificarCurso($_REQUEST['id']);
-            echo '<script> location.replace("../Controllers/CURSO_Controller.php"); </script>';
-            exit(0);
+            $respuesta = $curso->modificarCurso($_REQUEST['id']);
+            new Mensaje($respuesta, '../Controllers/CURSO_Controller.php');
         }
         break;
 
@@ -1039,9 +1049,8 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
             new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
         } else {
             $curso = get_data_form();
-            $curso->eliminarCurso($_REQUEST['id']);
-            echo '<script> location.replace("../Controllers/CURSO_Controller.php"); </script>';
-            exit(0);
+            $respuesta = $curso->eliminarCurso($_REQUEST['id']);
+            new Mensaje($respuesta, '../Controllers/CURSO_Controller.php');
         }
         break;
 

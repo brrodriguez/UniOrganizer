@@ -60,7 +60,8 @@ class CURSO_SHOWALL
 						<th><a href="?accion=ver&id=<?php echo $valor['0'];?>"><?php echo $valor['1'];?></a></th>
 						<td><?php echo $valor['2'];?></td>
 						<td><?php echo $usuario;?></td>
-
+						
+						<td><a href="?accion=vistadesasignar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-success"><?php echo $strings['EliminarAsignaturas'];?></button></a></td>
 						<td><a href="?accion=vistaasignar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-success"><?php echo $strings['AsignarAsignaturas'];?></button></a></td>
 						<td><a href="?accion=vistamodificar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-primary"><?php echo $strings['cursomodificar'];?></button></a></td>
 						<td><a href="?accion=vistaeliminar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-danger"><?php echo $strings['cursoeliminar'];?></button></a></td>

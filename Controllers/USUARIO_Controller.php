@@ -94,7 +94,6 @@ Switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 
     case $strings['Borrar']:
 
-        if (ConsultarTipoUsuario($_REQUEST['username']) == 1) {
             if (!isset($_REQUEST['nombre'])) {
                 //Crea un usuario solo con el user para rellenar posteriormente sus datos y mostrarlos en el formulario
                 $usuario = new USUARIO_Modelo($_REQUEST['username'], '', ConsultarTipoUsuario($_REQUEST['username']), '', '', '', '', '', '', '', '');
@@ -111,9 +110,7 @@ Switch ($_REQUEST['accion']) { //Actúa según la acción elegida
                 $respuesta = $usuario->Borrar();
                 new Mensaje($respuesta, 'USUARIO_Controller.php');
             }
-        }else{
-			 new Mensaje('No tienes los permisos necesarios', 'USUARIO_Controller.php');
-		}
+
         break;
 
     case $strings['Ver']:

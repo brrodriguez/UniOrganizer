@@ -41,7 +41,12 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
             if (!isset($_REQUEST['username'])) {
 				$usuario = new USUARIO_Modelo($_SESSION['login'], $_SESSION['pass'], '', '', '', '', '', '', '', '');
 				$cursos = $usuario->listarMisCursos();              
-                new ALERTA_Insertar( $cursos, '../Controllers/ALERTA_Controller.php');
+                if (!isset($_REQUEST['fecha'])) {
+					$fecha = NULL;
+				}else{
+					$fecha = $_REQUEST['fecha'];
+				}
+				new ALERTA_Insertar( $cursos, $fecha, '../Controllers/ALERTA_Controller.php');
 
             } else {
 				//Se transforma algún dato para obtener el formato correcto y se crean las alertas
@@ -74,7 +79,7 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
         } else {
             if (!isset($_REQUEST['username'])) {
 				$datos = obtenerDatosEntrega($_REQUEST['idCalendarioHoras']);
-                new ALERTA_Añadir( $datos, '../Controllers/ALERTA_Controller.php');
+                new ALERTA_Añadir( $datos, '../Views/DEFAULT_Vista.php');
 
             } else {
 				//Se transforma algún dato para obtener el formato correcto y se crean las alertas
@@ -117,6 +122,27 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
             
         }
         break;
+		
+	case $strings['Modificar']:
+		
+		if (!tienePermisos('ALERTA_Modificar')) {
+            new Mensaje('No tienes los permisos necesarios', '../Views/DEFAULT_Vista.php');
+        } else {
+			if (!isset($_REQUEST['username'])) {
+				
+                $idAlerta = $_REQUEST['idAlerta'];
+                $alerta = new ALERTA_Model($idAlerta, '', '');
+				$datos1 = $alerta->Ver(); 
+				$datos2 = obtenerDatosEvento($_REQUEST['idAlerta']);		              
+                new ALERTA_Modificar($datos1, $datos2, '../Views/DEFAULT_Vista.php');
+                
+            }else{
+				$alerta = get_data_form();
+				$respuesta = $alerta->Modificar($_REQUEST['fecha'], $_REQUEST['hora'], $_REQUEST['idCalendarioHoras']);
+				new Mensaje($respuesta, '../Controllers/ALERTA_Controller.php');
+			}
+        }
+        break;	
 
     case $strings['Ver']:
 		
@@ -127,16 +153,11 @@ switch ($_REQUEST['accion']) { //Actúa según la acción elegida
 				
                 $idAlerta = $_REQUEST['idAlerta'];
                 $alerta = new ALERTA_Model($idAlerta, '', '');
-                $datos = $alerta->Ver();               
-                new ALERTA_Ver($datos, '../Controllers/ALERTA_Controller.php');
+                $datos1 = $alerta->Ver();
+				$datos2 = obtenerDatosEvento($_REQUEST['idAlerta']);					
+                new ALERTA_Ver($datos1, $datos2, '../Controllers/ALERTA_Controller.php');
                 
-
-            } else {
-                $alerta = new ALERTA_Model($_REQUEST['idAlerta'], '', '');
-				$respuesta = $alerta->Borrar();
-				new Mensaje($respuesta, '../Controllers/ALERTA_Controller.php');
             }
-            
         }
         break;
 

@@ -29,18 +29,22 @@ class ASIGNATURA_SHOWALL{
 					</tr>
 				</thead>
 				<tbody>
-		<?php
-		foreach($this->datos as $valor)
-		{?>
-					<tr>
-						<th><br><?php echo $valor['1']; ?></th>
-						<td><a href="https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/index.php<?php echo $valor['href'];?>"><button type="button" class="btn btn-success"><?php echo $strings['Guia'];?></button></a></td><?php
-						if($this->tipoUsuario==1){
-							?><td><a href="?accion=vistaeliminar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-danger"><?php echo $strings['asignaturaeliminar'];?></button></a></td><?php
-						}?>
-					</tr>
 			<?php
-		}?>					
+			if($this->datos==NULL){
+				
+			}else{
+				foreach($this->datos as $valor)
+				{?>
+							<tr>
+								<th><br><?php echo $valor['1']; ?></th>
+								<td><a href="https://secretaria.uvigo.gal/docnet-nuevo/guia_docent/index.php<?php echo $valor['href'];?>" target="_blank"><button type="button" class="btn btn-success"><?php echo $strings['Guia'];?></button></a></td><?php
+								if($this->tipoUsuario==1){
+									?><td><a href="?accion=vistaeliminar&id=<?php echo $valor['0'];?>"><button type="button" class="btn btn-danger"><?php echo $strings['asignaturaeliminar'];?></button></a></td><?php
+								}?>
+							</tr>
+					<?php
+				}
+			}?>					
 				</tbody>
 			</table>
 		</div>

@@ -60,6 +60,7 @@ class ALERTA_Listar {
 											}
 										}
 										?>
+										<td><button type="button" class="btn btn-primary"><a href='ALERTA_Controller.php?idAlerta=<?php echo $this->datos[$j]['idAlerta'] . '&accion=' . $strings['Modificar']; ?>'><?php echo $strings['Modificar']; ?></a></button></td>
 										<td><button type="button" class="btn btn-danger"><a href='ALERTA_Controller.php?idAlerta=<?php echo $this->datos[$j]['idAlerta'] . '&accion=' . $strings['Borrar']; ?>'><?php echo $strings['Borrar']; ?></a></button></td>
 										<?php
 									}							                           

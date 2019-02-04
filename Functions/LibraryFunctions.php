@@ -160,26 +160,32 @@ function añadirFuncionalidades($NOM) {
 
             switch ($funcionalidad) {
 
-                case "Gestion Usuarios":
+					
+				case "Gestion Usuarios":
 					if(ConsultarTipoUsuarioLogin()==1){
                         ?><li><a style="font-size:15px;" href="../Controllers/USUARIO_Controller.php"><?php echo $strings['Gestión de Usuarios']; ?></a></li> <?php
 					}
                     break;
+					
+				case "Gestion Asignaturas":
+				?>
+                    <li class="nav-item dropdown">
+                        <a style="font-size:15px;" class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $strings['Gestión de Asignaturas'] ?> </a>
+                        <div align='center' class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="../Controllers/CURSO_Controller.php"><?php echo $strings['Gestionar']; ?></a><br>
+                            <a class="dropdown-item" href="../Controllers/ASIGNATURA_Controller.php"><?php echo $strings['Información']; ?></a>
+                        </div>
+                    </li>
 
-                case "Gestion Cursos":
-                    ?><li><a style="font-size:15px;" href="../Controllers/CURSO_Controller.php"><?php echo $strings['Gestión de Cursos']; ?></a></li> <?php
+                    <?php
                     break;			
 					
                 case "Gestion Eventos":
                     ?><li><a style="font-size:15px;" href="../Controllers/ALERTA_Controller.php"><?php echo $strings['Gestión de Eventos']; ?></a></li> <?php
                     break;
-				
-				case "Gestion Asignaturas":
-                    ?><li><a style="font-size:15px;" href="../Controllers/ASIGNATURA_Controller.php"><?php echo $strings['Gestión de Asignaturas']; ?></a></li> <?php
-                    break;
 
                 default:
-                    break;
+					break;
             }
         }
     }
@@ -220,8 +226,14 @@ function showNavbar() {
     } else {
         include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php';
         añadirFuncionalidades($_SESSION);
-        ?>
-        <li class="nav-item dropdown">
+        
+		if(ConsultarTipoUsuarioLogin()==2){
+		?>	
+		<li>
+			<a style="font-size:15px;" href="../Functions/Acceso.php?username=<?php echo $_SESSION['login']; ?>&password=<?php echo $_SESSION['pass']; ?>&IDIOMA=<?php echo $_SESSION['IDIOMA']; ?>&wk=<?php echo $_SESSION['semana']; ?>&contador=<?php echo $_SESSION['contador']; ?>&curso=0&accion=Login"><?php echo $strings['Calendario'] ?></a><br>
+        </li>
+		<?php } ?>
+		<li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <?php echo $strings['Cuenta'] ?>
             </a>
@@ -363,7 +375,23 @@ function obtenerIdAsignatura($asignatura) {
 			echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
 		}
 		
-        $sql = "SELECT A.asuntoEntrega, A.idCurso, B.dia, B.horaInicio FROM calendario_horas A, horas_posibles B WHERE A.idHoraPosible=B.idHoraPosible AND idCalendarioHoras= '" . $idCalendarioHoras . "'";
+        $sql = "SELECT A.idCalendarioHoras, A.asuntoEntrega, A.idCurso, B.dia, B.horaInicio FROM calendario_horas A, horas_posibles B WHERE A.idHoraPosible=B.idHoraPosible AND idCalendarioHoras= '" . $idCalendarioHoras . "'";
+        if (($resultado = $mysqli->query($sql))) {
+            $result = $resultado->fetch_array();
+            return $result;
+        } else {
+            return 'Error en la consulta sobre la base de datos.';
+        }
+    }
+	
+	//Devuelve los datos de una entrega
+    function obtenerDatosEvento($idAlerta) {
+        $mysqli = new mysqli("localhost", "root", "", "uniorganizer");
+		if ($mysqli->connect_errno) {
+			echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+		}
+		
+        $sql = "SELECT A.idCalendarioHoras, A.asuntoEntrega, A.idCurso, B.dia, B.horaInicio FROM calendario_horas A, horas_posibles B WHERE A.idHoraPosible=B.idHoraPosible AND idAlerta= '" . $idAlerta . "'";
         if (($resultado = $mysqli->query($sql))) {
             $result = $resultado->fetch_array();
             return $result;
@@ -391,7 +419,7 @@ function numEventosAlertas($fecha1, $fecha2) {
 
 use om\icalparser;
 
-require_once 'C:\xampp\htdocs\UniOrganizer2\vendor\autoload.php';
+require_once 'C:\xampp\htdocs\UniOrganizer\vendor\autoload.php';
 
 function extraerEntregasPrimero(){
 	

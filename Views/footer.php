@@ -15,7 +15,7 @@
 						<ul class="link-list">
                                                     <li><a target="_blank" href="https://www.google.es/maps/place/Campus+Ourense/@42.3449233,-7.8554787,15z/data=!4m5!3m4!1s0x0:0xbf4fd0b3ac19bfea!8m2!3d42.3439349!4d-7.8573355"><img src="../img/gps.png" width="20px" height="20px"></a></li>
 							<li><a href="#">987353839</a></li>
-							<li><a href="#">uniorganizer@gmail.com</a></li>
+							<li><a href="#">uniorganizerapplication@gmail.com</a></li>
 						</ul>
 					</div>
 				</div>

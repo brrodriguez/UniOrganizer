@@ -2,8 +2,6 @@
 
 class Login {
 
-    var $view;
-
 //VISTA REALIZAR EL LOGIN
     function __construct() {
         $this->render();
@@ -15,7 +13,7 @@ class Login {
         <!DOCTYPE html>
         <html>
             <head>
-                 <link rel="shortcut icon" href="../img/Gym.ico">
+                <link rel="shortcut icon" href="../img/LogoUO.png">
                 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                 <meta name="viewport" content="width=1,initial-scale=1,user-scalable=1" />
                 <title>UniOrganizer</title>
@@ -40,14 +38,16 @@ class Login {
                             <button type="submit" name="accion" class="btn btn-lg btn-primary btn-block" value="Login">Sign in</button>
                             <div>
                                 <!--SELECCION DE IDIOMA-->
-                                <p><select name="IDIOMA">
+                                <p>
+									<select name="IDIOMA">
                                         <option value="Castellano">Castellano</option>
                                         <option value="Galego">Galego</option>
                                         <option value="English">English</option>
-                                    </select></p>
-                                    <div aling='center'>
-                                <a href='../index.php'><?php echo $strings['Volver']; ?> </a>
-                                    </div>
+                                    </select>
+								</p>
+                                <div aling='center'>
+									<a href='../index.php'><?php echo $strings['Volver']; ?> </a>
+                                </div>
                             </div>
 
 

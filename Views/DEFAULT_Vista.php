@@ -40,18 +40,18 @@
 				<table>
 					<thead>
 					<tr>
-					<th align="left" width=450>
+					<th align="left" width=400>
 						<form method="post" action="../Functions/Acceso.php" role="login">
 						  <input type="text" name="username" value="<?= $_SESSION['login'] ?>" hidden=true>
                           <input type="password" name="password" value="<?= $_SESSION['pass'] ?>" hidden=true>
 						  <input type="text" name="IDIOMA" value="<?= $_SESSION['IDIOMA'] ?>" hidden=true>
 						  <input type="number" name="wk" value="<?= $semanaA ?>" hidden=true>
 						  <input type="number" name="contador" value="<?= $contE ?>" hidden=true>
-						  <input type="number" name="curso" value=0 hidden=true>
+						  <input type="number" name="curso" value="0" hidden=true>
 						  <button type="submit" name="accion" class="btn btn-lg btn-primary" value="Login"><?= $strings["Anterior Semana"] ?></button>
 						</form>
 					</th>
-					<th width=500>
+					<th width=250>
 						<form method="post" action="../Functions/Acceso.php" role="login">
 							<input type="text" name="username" value="<?= $_SESSION['login'] ?>" hidden=true>
 							<input type="password" name="password" value="<?= $_SESSION['pass'] ?>" hidden=true>
@@ -69,6 +69,11 @@
 							<button type="submit" name="accion" class="btn btn-lg btn-primary" value="Login"><?= $strings["Filtrar"] ?></button>
 						</form>
 					</th>
+					<th width=400>
+						<a href='../Controllers/ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'>
+							<button type="button" class="btn btn-lg btn-primary"><?php echo $strings['Crear'] ?></button>
+						</a>
+					</th>
 						<?php if ($_SESSION['semana']+1 == 53){
 						  $semanaN=1;
 						}else{
@@ -83,7 +88,7 @@
 							<input type="text" name="IDIOMA" value="<?= $_SESSION['IDIOMA'] ?>" hidden=true>
 							<input type="number" name="wk" value="<?= $semanaN ?>" hidden=true>
 							<input type="number" name="contador" value="<?= $contA ?>" hidden=true>
-							<input type="number" name="curso" value=0 hidden=true>
+							<input type="number" name="curso" value="0" hidden=true>
 							<button type="submit" name="accion" class="btn btn-lg btn-primary" value="Login"><?= $strings["Próxima Semana"] ?></button>
 						</form>
 					</th>   
@@ -186,13 +191,13 @@
 					}
 					?>
 					<tr>
-					  <th><?= $lunes ?></th>
-					  <th><?= $martes ?></th>
-					  <th><?= $miercoles ?></th>
-					  <th><?= $jueves ?></th>
-					  <th><?= $viernes ?></th>
-					  <th><?= $sabado ?></th>
-					  <th><?= $domingo ?></th>
+					  <th><a style="font-size:15px;" href="../Controllers/ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>&fecha=<?= $lunes; ?>"><?= $lunes ?></a></th>
+					  <th><a style="font-size:15px;" href="../Controllers/ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>&fecha=<?= $martes; ?>"><?= $martes ?></a></th>
+					  <th><a style="font-size:15px;" href="../Controllers/ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>&fecha=<?= $miercoles; ?>"><?= $miercoles ?></a></th>
+					  <th><a style="font-size:15px;" href="../Controllers/ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>&fecha=<?= $jueves; ?>"><?= $jueves ?></a></th>
+					  <th><a style="font-size:15px;" href="../Controllers/ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>&fecha=<?= $viernes; ?>"><?= $viernes ?></a></th>
+					  <th><a style="font-size:15px;" href="../Controllers/ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>&fecha=<?= $sabado; ?>"><?= $sabado ?></a></th>
+					  <th><a style="font-size:15px;" href="../Controllers/ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>&fecha=<?= $domingo; ?>"><?= $domingo ?></a></th>
 					</tr>
 					<tr>
 					  <th><?= $strings['Monday'] ?></th>
@@ -218,7 +223,7 @@
 										<?php } ?>
 							  <?php } else { ?>
 										<div style="color: orange;">
-											<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>
+											<li><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"]; ?>&idAlerta=<?php echo $value["idAlerta"]; ?>&accion=<?php echo $strings['Modificar']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>
 										</div>	
 							  <?php } ?>						  
 							  <hr>
@@ -230,14 +235,14 @@
 							   <?php if($value["nombreAsignatura"]){
 										if($value["asuntoEntrega"]){?>
 										<div style="color: blue;">
-											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
+											<li><b><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"] . '&accion=' . $strings['Añadir']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
 											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
 										</div>
 										<?php } ?>
 							  <?php } else { ?>
 										<div style="color: orange;">
-											<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>
-										</div>										
+											<li><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"]; ?>&idAlerta=<?php echo $value["idAlerta"]; ?>&accion=<?php echo $strings['Modificar']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>
+										</div>	
 							  <?php } ?>							  
 							  <hr>
 						  <?php }?>
@@ -248,12 +253,14 @@
 							   <?php if($value["nombreAsignatura"]){
 										if($value["asuntoEntrega"]){?>
 										<div style="color: blue;">
-											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
+											<li><b><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"] . '&accion=' . $strings['Añadir']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
 											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
 										</div>
 										<?php } ?>
 							  <?php } else { ?>
-										<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>										
+										<div style="color: orange;">
+											<li><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"]; ?>&idAlerta=<?php echo $value["idAlerta"]; ?>&accion=<?php echo $strings['Modificar']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>
+										</div>	
 							  <?php } ?>							  
 							  <hr>
 						  <?php }?>
@@ -264,12 +271,14 @@
 							   <?php if($value["nombreAsignatura"]){
 										if($value["asuntoEntrega"]){?>
 										<div style="color: blue;">
-											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
+											<li><b><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"] . '&accion=' . $strings['Añadir']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
 											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
 										</div>
 										<?php } ?>
 							  <?php } else { ?>
-										<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>									
+										<div style="color: orange;">
+											<li><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"]; ?>&idAlerta=<?php echo $value["idAlerta"]; ?>&accion=<?php echo $strings['Modificar']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>
+										</div>	
 							  <?php } ?>							  
 							  <hr>
 						  <?php }?>
@@ -280,12 +289,14 @@
 							   <?php if($value["nombreAsignatura"]){
 										if($value["asuntoEntrega"]){?>
 										<div style="color: blue;">
-											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
+											<li><b><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"] . '&accion=' . $strings['Añadir']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
 											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
 										</div>
 										<?php } ?>
 							  <?php } else { ?>
-										<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>									
+										<div style="color: orange;">
+											<li><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"]; ?>&idAlerta=<?php echo $value["idAlerta"]; ?>&accion=<?php echo $strings['Modificar']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>
+										</div>	
 							  <?php } ?>							  
 							  <hr>
 						  <?php }?>
@@ -296,12 +307,14 @@
 							   <?php if($value["nombreAsignatura"]){
 										if($value["asuntoEntrega"]){?>
 										<div style="color: blue;">
-											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
+											<li><b><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"] . '&accion=' . $strings['Añadir']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
 											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
 										</div>
 										<?php } ?>
 							  <?php } else { ?>
-										<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>									
+										<div style="color: orange;">
+											<li><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"]; ?>&idAlerta=<?php echo $value["idAlerta"]; ?>&accion=<?php echo $strings['Modificar']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>
+										</div>	
 							  <?php } ?>							  
 							  <hr>
 						  <?php }?>
@@ -312,12 +325,14 @@
 							   <?php if($value["nombreAsignatura"]){
 										if($value["asuntoEntrega"]){?>
 										<div style="color: blue;">
-											<li><b><a href='ALERTA_Controller.php?accion=<?php echo $strings['Crear']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
+											<li><b><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"] . '&accion=' . $strings['Añadir']; ?>'><?php echo $value["asuntoEntrega"]."\n" ?></a></b></li>
 											<li><a><?php echo $value["nombreCurso"]."\n" ?></a></li>
 										</div>
 										<?php } ?>
 							  <?php } else { ?>
-										<li><a href='../Controllers/ALERTA_Controller.php?idAlerta=<?php echo $value["idAlerta"] . '&accion=' . $strings['Ver']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>									
+										<div style="color: orange;">
+											<li><a href='../Controllers/ALERTA_Controller.php?idCalendarioHoras=<?php echo $value["idCalendarioHoras"]; ?>&idAlerta=<?php echo $value["idAlerta"]; ?>&accion=<?php echo $strings['Modificar']; ?>'><font color="#088A4B"><?php echo $value["asuntoAlerta"] ?></font></a></li>
+										</div>	
 							  <?php } ?>							  
 							  <hr>
 						  <?php }?>

@@ -19,23 +19,22 @@ class CURSO_ADD {
        <div class="container">
 				<form method="POST" action="../Controllers/CURSO_Controller.php?accion=insertar">
 					<div class="form-group row">
-						<label for="example-text-input" class="col-2 col-form-label"><?php echo $strings['nombreCurso'];?></label>
+						<label for="example-text-input" class="col-2 col-form-label"><?php echo $strings['nombreCurso'];?>*</label>
 						<div class="col-10">
 							<input class="form-control" type="text" name="nombreCurso" id="example-text-input" required>
 						</div>
 					</div>
 					
 					<div class="form-group row">
-						<label for="example-text-input" class="col-2 col-form-label"><?php echo $strings['descripcionCurso'];?></label>
+						<label for="example-text-input" class="col-2 col-form-label"><?php echo $strings['descripcionCurso'];?>*</label>
 						<div class="col-10">
 							<input class="form-control" type="text" name="descripcionCurso" id="example-text-input" required>
 						</div>
 					</div>
 					
 					<div class="form-group row">
-						<label for="example-text-input" class="col-2 col-form-label"><?php echo $strings['idCalendario'];?></label>
 						<div class="col-10">
-							<input class="form-control" id="example-text-input" name="idCalendario" size="10" type="text" required="true" value="<?php echo $this->idCalendario ;?>" readonly="true"/>
+							<input type="hidden" class="form-control" id="example-text-input" name="idCalendario" size="10" type="text" required="true" value="<?php echo $this->idCalendario ;?>" readonly="true"/>
 						</div>
 					</div>
 

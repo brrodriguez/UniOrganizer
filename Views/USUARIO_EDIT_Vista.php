@@ -70,6 +70,10 @@ class USUARIO_Modificar {
                     <input class="form" id="email" name="email" size="50" type="email" required="true" value="<?php echo $this->valores['email']; ?>">
                 </div>
 				
+				<div class="form-group">
+                    <input type="hidden" id="tipoUsuario" name="tipoUsuario" size="1" type="int" required="true" value="<?php echo $this->valores['tipoUsuario']; ?>">
+                </div>
+				
 
                 <br>
 

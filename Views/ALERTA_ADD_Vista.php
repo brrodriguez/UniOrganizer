@@ -10,16 +10,19 @@
 class ALERTA_Insertar {
 
 	private $cursos;
+	private $fecha;
     private $volver;
 
-    function __construct( $cursos, $volver) {
+    function __construct( $cursos, $fecha, $volver) {
 		$this->cursos = $cursos;
+		$this->fecha = $fecha;
         $this->volver = $volver;
         $this->render();
     }
 
     function render() {
-        ?><script type="text/javascript" src="../js/<?php echo $_SESSION['IDIOMA'] ?>_validate.js"></script>
+		?>
+        <script type="text/javascript" src="../js/validate.js"></script>
         <?php include '../Locates/Strings_' . $_SESSION['IDIOMA'] . '.php'; ?>
                   
 
@@ -30,26 +33,34 @@ class ALERTA_Insertar {
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" ><?php echo $strings['asuntoAlerta']; ?></label><br>
-                    <input class="form" id="asuntoAlerta" name="asuntoAlerta" size="50" type="text" required="true"/>
+                    <label class="control-label" ><?php echo $strings['asuntoAlerta']; ?>*</label><br>
+                    <input onchange="return valida_envia_asuntoAlerta()" class="form" id="asuntoAlerta" name="asuntoAlerta" size="50" type="text" required="true"/>
                 </div>
 
                <div class="form-group">
-                    <label class="control-label" ><?php echo $strings['descripcionAlerta']; ?></label><br>
-                    <textarea class="form" id="descripcionAlerta" name="descripcionAlerta" rows="10" cols="70" required="true"></textarea>
+                    <label class="control-label" ><?php echo $strings['descripcionAlerta']; ?>*</label><br>
+                    <textarea onchange="return valida_envia_descripcionAlerta()" class="form" id="descripcionAlerta" name="descripcionAlerta" rows="10" cols="70" required="true"></textarea>
                 </div>
 				
+				<?php if($this->fecha==NULL){ ?>
 				<div class="form-group">
                     <label class="control-label" ><?php echo $strings['Fecha']; ?></label><br>
                     <input class="form" id="fecha" name="fecha" type="date" required="true"/>
                 </div>
+				<?php }else{ ?>
+				<div class="form-group">
+                    <label class="control-label" ><?php echo $strings['Fecha']; ?></label><br>
+                    <input class="form" id="fecha" name="fecha" type="date" required="true" value="<?php echo $this->fecha; ?>"/>
+                </div>	
+				<?php } ?>
 
                 <div class="form-group">
-                    <label class="control-label" ><?php echo $strings['Hora']; ?></label><br>
-                    <input class="form" id="hora" name="hora" type="time" required="true"/>
+                    <label class="control-label" ><?php echo $strings['Hora']; ?>*</label><br>
+                    <input onchange="return valida_envia_hora()" class="form" id="hora" name="hora" type="time" required="true"/>
                 </div>
 				
 				<div class="form-group">
+					<label class="control-label" ><?php echo $strings['Curso']; ?>*</label><br>
 					<select name="curso">
 						<?php
 						foreach($this->cursos as $curso){
@@ -70,7 +81,7 @@ class ALERTA_Insertar {
                     <input class="form" id="dias" name="dias" type="text"/>
                 </div>
 				
-                <input type='submit' onclick="" name='accion'  value="<?php echo $strings['Crear']; ?>">
+                <input type='submit' onclick="return valida_envia_ALERTA()" name='accion'  value="<?php echo $strings['Crear']; ?>">
                 <a class="form-link" href="<?php echo $this->volver ?>"><?php echo $strings['Volver']; ?></a>
             </form>
         </div>

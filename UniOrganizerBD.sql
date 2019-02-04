@@ -103,15 +103,17 @@ INSERT INTO `pagina` (`idPagina`, `linkPagina`, `nombrePagina`) VALUES
 (151, '../Views/CURSO_ADD_Vista.php', 'Curso ADD'),
 (152, '../Views/CURSO_EDIT_Vista.php', 'Curso EDIT'),
 (153, '../Views/CURSO_SHOW_Vista.php', 'Curso SHOW'),
-(154, '../Views/CURSO_ASIGN_Vista.php', 'Curso ASIGN'),
+(154, '../Views/CURSO_ASSIGN_Vista.php', 'Curso ASSIGN'),
 (155, '../Views/CURSO_IMPORT_Vista.php', 'Curso IMPORT'),
 (156, '../Views/CURSO_DELETE_Vista.php', 'Curso DELETE'),
 (157, '../Views/CURSO_FILTER_Vista.php', 'Curso FILTER'),
+(158, '../Views/CURSO_UNASSIGN_Vista.php', 'Curso UNASSIGN'),
 (200, '../Views/ALERTA_SHOWALL_Vista.php', 'Alerta SHOWALL'),
 (201, '../Views/ALERTA_SHOW_Vista.php', 'Alerta SHOW'),
 (202, '../Views/ALERTA_ADD_Vista.php', 'Alerta ADD'),
 (203, '../Views/ALERTA_DELETE_Vista.php', 'Alerta DELETE'),
-(204, '../Views/ALERTA_ENTREGA_ADD_Vista.php', 'Alerta Entrega ADD');
+(204, '../Views/ALERTA_ENTREGA_ADD_Vista.php', 'Alerta Entrega ADD'),
+(205, '../Views/ALERTA_EDIT_Vista.php', 'Alerta EDIT');
 
 -- --------------------------------------------------------
 
@@ -146,11 +148,13 @@ INSERT INTO `funcionalidad` (`idFuncionalidad`, `nombreFuncionalidad`, `categori
 (155, 'Importar Curso', 'Gestion Cursos'),
 (156, 'Borrar Curso', 'Gestion Cursos'),
 (157, 'Filtrar Cursos', 'Gestion Cursos'),
+(158, 'Desasignar Asignaturas', 'Gestion Cursos'),
 (200, 'Listar Eventos', 'Gestion Eventos'),
 (201, 'Ver Evento', 'Gestion Eventos'),
 (202, 'Insertar Evento', 'Gestion Eventos'),
 (203, 'Baja Evento', 'Gestion Eventos'),
-(204, 'Añadir Evento', 'Gestion Eventos');
+(204, 'Añadir Evento', 'Gestion Eventos'),
+(205, 'Modificar Evento', 'Gestion Eventos');
 
 -- --------------------------------------------------------
 
@@ -184,12 +188,13 @@ INSERT INTO `funcionalidad_pagina` (`idFuncionalidad`, `idPagina`) VALUES
 (155, 155),
 (156, 156),
 (157, 157),
+(158, 158),
 (200, 200),
 (201, 201),
 (202, 202),
 (203, 203),
-(204, 204);
-
+(204, 204),
+(205, 205);
 -- --------------------------------------------------------
 
 --
@@ -233,6 +238,8 @@ INSERT INTO `funcionalidad_rol` (`idFuncionalidad`, `idRol`) VALUES
 (156, 1),
 (156, 2),
 (157, 1),
+(158, 1),
+(158, 2),
 (200, 1),
 (200, 2),
 (201, 1),
@@ -240,7 +247,8 @@ INSERT INTO `funcionalidad_rol` (`idFuncionalidad`, `idRol`) VALUES
 (202, 2),
 (203, 1),
 (203, 2),
-(204, 2);
+(204, 2),
+(205, 2);
 
 -- --------------------------------------------------------
 
